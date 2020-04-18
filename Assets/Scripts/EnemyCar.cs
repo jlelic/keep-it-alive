@@ -24,7 +24,6 @@ public class EnemyCar : MonoBehaviour
         if(isOk)
         {
             var fw = transform.up;
-            Debug.Log(fw);
             rigidbody.velocity = new Vector2(fw.x, fw.y) * 2;
         }
     }

@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     public bool IsPlaying { get; private set; } = true;
     public float CarSpeed { get; private set; } = 0f;
+    public float ActualMaxSpeed { get; private set; } = 0.1f;
     public float MaxSpeed { get; private set; } = 0.1f;
     public float SlowDown { get; private set; } = 0.001f;
     public float SpeedUp{ get; private set; } = 0.0005f;
@@ -20,6 +21,7 @@ public class GameManager : MonoBehaviour
     public float WaterLevel { get; private set; } = 100f;
     public float EngineLevel { get; private set; } = 100f;
     public float WiperWaterCost { get; private set; } = 20f;
+    public float HitDamage { get; private set; } = 40f;
 
     RoadsManager roadsManager;
     WiperManager wiperManager;
@@ -57,6 +59,8 @@ public class GameManager : MonoBehaviour
 
     void FixedUpdate()
     {
+        MaxSpeed = EngineLevel > 40 ? ActualMaxSpeed : ActualMaxSpeed * EngineLevel / 40f;
+
         GasLevel -= GasConsumption;
         GasLevel = Mathf.Max(GasLevel, 0);
         if (GasLevel <= 0)
@@ -73,5 +77,15 @@ public class GameManager : MonoBehaviour
 
         WaterLevel -= HeatLevel > 50 ? HeatLevel /100f * WaterEvaporation : 0;
         WaterLevel = Mathf.Max(WaterLevel, 0);
+    }
+
+    public void TakeHit()
+    {
+        EngineLevel -= HitDamage;
+        EngineLevel = Mathf.Max(0, EngineLevel);
+    }
+    public void DirtyWindow()
+    {
+        wiperManager.Dirty();
     }
 }

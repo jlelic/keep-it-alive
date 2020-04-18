@@ -831,8 +831,9 @@ GameObject:
   - component: {fileID: 729469002}
   - component: {fileID: 729469004}
   - component: {fileID: 729469003}
+  - component: {fileID: 729469005}
   m_Layer: 10
-  m_Name: Car
+  m_Name: Ship
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -919,6 +920,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Hand: {fileID: 815897433}
+  leftFire: {fileID: 478587860}
+  rightFire: {fileID: 156044422}
 --- !u!70 &729469003
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -954,8 +957,20 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 6
+--- !u!114 &729469005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 729468999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0df717305d1f23488d23bc3a1198bc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &745583877
 GameObject:
   m_ObjectHideFlags: 0
@@ -1066,8 +1081,13 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 9d58a4ca23970be46ab78685e876ea79, type: 3}
   - {fileID: 21300000, guid: 466c21b13f20625459a129cc023322d2, type: 3}
   dirtSprites:
-  - {fileID: 21300000, guid: 466c21b13f20625459a129cc023322d2, type: 3}
-  - {fileID: 21300000, guid: eb86e69b87ed85345b956ee02f45709a, type: 3}
+  - {fileID: 21300000, guid: aa0884f043201254e98c4566376f173e, type: 3}
+  - {fileID: 21300000, guid: 28cc707b050c2224883b8e2bfe966363, type: 3}
+  - {fileID: 21300000, guid: c0206bb39673cd242856f065393a0f79, type: 3}
+  - {fileID: 21300000, guid: 5052af7f89a888c47993bb1caa716c2f, type: 3}
+  - {fileID: 21300000, guid: cc57a4249bd96ca43931c603ed91bbd4, type: 3}
+  - {fileID: 21300000, guid: d0ef0aa5c15e1d24f8b1bee6dc6df024, type: 3}
+  - {fileID: 21300000, guid: af9b43dd9be6e1c46a42d8c7a0808305, type: 3}
 --- !u!1 &775910055
 GameObject:
   m_ObjectHideFlags: 0
@@ -1748,8 +1768,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.013427734, y: 0}
-  m_SizeDelta: {x: 0.026855469, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1100026863
 MonoBehaviour:
@@ -1782,7 +1802,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2373,7 +2393,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1688575883}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -2413,12 +2433,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 466c21b13f20625459a129cc023322d2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cc57a4249bd96ca43931c603ed91bbd4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

@@ -9,6 +9,7 @@ public class Hand : MonoBehaviour
     public void GrabItem(Item item)
     {
         grabbedItems.Add(item);
+        Destroy(item.GetComponent<Rigidbody2D>());
         item.transform.parent = transform;
     }
 

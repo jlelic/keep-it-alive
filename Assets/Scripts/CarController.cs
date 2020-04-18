@@ -2,10 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CarController : MonoBehaviour
 {
     public GameObject Hand;
+    [SerializeField] SpriteRenderer leftFire;
+    [SerializeField] SpriteRenderer rightFire;
     float TurningSpeed = 30;
     bool canUseHand = true;
     Hand hand;
@@ -23,9 +26,20 @@ public class CarController : MonoBehaviour
     void Update()
     {
         //transform.position += new Vector3(Input.GetAxis("Horizontal"),0,0)*Mathf.Min(TurningSpeed, GameManager.Instance.CarSpeed);
-        rigidbody.AddForce(new Vector2(Input.GetAxis("Horizontal"), 0) * (TurningSpeed * GM.CarSpeed / GM.MaxSpeed));
+        float axis = Input.GetAxis("Horizontal");
+        if (GM.MaxSpeed > 0)
+        {
+            rigidbody.AddForce(new Vector2(axis, 0) * (TurningSpeed * GM.CarSpeed / GM.MaxSpeed));
+            rightFire.color = new Color(1, 1, 1, axis >= 0 ? 1 - axis : 1);
+            leftFire.color = new Color(1, 1, 1, axis <= 0 ? 1 + axis : 1);
+        }
+        else
+        {
+            rightFire.color = Color.clear;
+            leftFire.color = Color.clear;
+        }
 
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             if(!canUseHand)
             {
