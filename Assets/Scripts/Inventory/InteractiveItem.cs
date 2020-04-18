@@ -41,8 +41,12 @@ public class InteractiveItem : MonoBehaviour
         if (collidingTarget != null) {
             collidingTarget.DoTheStuff();
             Destroy(gameObject);
-        }
+        } else {
+            
+        }        
+        Vector3 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - anchorHj2d.transform.position;
         Destroy(anchorHj2d.gameObject);
+        rb2d.AddForce(100 * direction, ForceMode2D.Impulse);
     }
 
     void OnTriggerEnter2D(Collider2D other)

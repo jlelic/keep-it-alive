@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4454749842678320579}
   - component: {fileID: 2149260912794759337}
   m_Layer: 8
-  m_Name: GameObject
+  m_Name: InventoryCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -61,22 +61,22 @@ PolygonCollider2D:
       - {x: 1.5148749, y: -0.7829149}
       - {x: 1.2786646, y: -1.1895082}
       - {x: 0.9368639, y: -1.4465749}
-      - {x: -0.12982035, y: -1.5276544}
+      - {x: -0.044152737, y: -1.5276544}
       - {x: -1.1999145, y: -1.3883665}
-      - {x: -1.6037455, y: -0.61993194}
+      - {x: -1.5502033, y: -0.73772454}
       - {x: -1.9466481, y: 0.40487742}
       - {x: -2.1297407, y: 1.3057481}
-      - {x: -2.365185, y: 1.322525}
-      - {x: -2.111572, y: 0.15080261}
-      - {x: -1.7070987, y: -0.9012387}
-      - {x: -1.3494973, y: -1.5191739}
-      - {x: -0.96180725, y: -1.6261342}
-      - {x: 0.6009412, y: -1.6753886}
-      - {x: 1.1616745, y: -1.579798}
-      - {x: 1.3903689, y: -1.292805}
-      - {x: 1.8348827, y: -0.48649192}
-      - {x: 2.163094, y: 0.4226637}
-      - {x: 2.359418, y: 1.255091}
+      - {x: -2.4936862, y: 1.3011081}
+      - {x: -2.2400732, y: 0.19363642}
+      - {x: -1.8034742, y: -0.9761975}
+      - {x: -1.3709142, y: -1.6262581}
+      - {x: -0.86543155, y: -1.7760532}
+      - {x: -0.041564465, y: -1.8253062}
+      - {x: 1.097424, y: -1.7404244}
+      - {x: 1.4546189, y: -1.4427226}
+      - {x: 1.8241739, y: -0.81845284}
+      - {x: 2.2166357, y: 0.19778681}
+      - {x: 2.4879193, y: 1.255091}
 --- !u!1 &1000628133081721896
 GameObject:
   m_ObjectHideFlags: 0
@@ -87,6 +87,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1000628133081721897}
   - component: {fileID: -8477986420134202456}
+  - component: {fileID: 6446077328659097390}
   m_Layer: 8
   m_Name: InventoryContainer
   m_TagString: Untagged
@@ -132,6 +133,21 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
+--- !u!114 &6446077328659097390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000628133081721896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89959c09b65864c41a87fded0325718d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enabled: 0
+  shakeStrength: 0.1
+  shakeInterval: 0.1
 --- !u!1 &2283496247944755677
 GameObject:
   m_ObjectHideFlags: 0
