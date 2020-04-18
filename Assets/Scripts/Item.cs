@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
+    public ItemManager itemManager;
+    public GameObject spawnPrefab;
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -16,6 +18,8 @@ public class Item : MonoBehaviour
 
     public void SpawnInventoryPrefab()
     {
-        // TODO        
+        if (itemManager != null && spawnPrefab != null) {
+            itemManager.SpawnItem(spawnPrefab);
+        }
     }
 }
