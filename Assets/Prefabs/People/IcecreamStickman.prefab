@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1945598461313674196}
   - component: {fileID: 1945598461313674199}
   - component: {fileID: 1945598461313674194}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: icecream
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -122,6 +122,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 681b15e0d9fe85e4c99002801b9d3258, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemManager: {fileID: 0}
+  spawnPrefab: {fileID: 0}
 --- !u!50 &1945598461313674194
 Rigidbody2D:
   serializedVersion: 4
