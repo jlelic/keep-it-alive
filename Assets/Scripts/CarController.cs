@@ -6,7 +6,7 @@ using UnityEngine;
 public class CarController : MonoBehaviour
 {
     public GameObject Hand;
-
+    
     float TurningSpeed = 0.01f;
 
     bool canUseHand = true;
@@ -21,7 +21,7 @@ public class CarController : MonoBehaviour
 
     void Update()
     {
-        transform.position += new Vector3(Input.GetAxis("Horizontal"),0,0)*TurningSpeed;
+        transform.position += new Vector3(Input.GetAxis("Horizontal"),0,0)*Mathf.Min(TurningSpeed, GameManager.Instance.CarSpeed);
         if(Input.GetMouseButtonDown(0))
         {
             if(!canUseHand)
@@ -29,14 +29,15 @@ public class CarController : MonoBehaviour
                 return;
             }
 
+            canUseHand = false;
 
             var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePos -= new Vector3(0, 0, mousePos.z);
             Vector3 perpendicular = Vector3.Cross(transform.position - mousePos, Vector3.forward);
             Hand.transform.rotation = Quaternion.LookRotation(Vector3.forward, perpendicular);
 
-            var dir = mousePos - Hand.transform.position;
-            var targetWorldPos = Hand.transform.position + dir * 0.3f;
+            var dir = (mousePos - Hand.transform.position).normalized;
+            var targetWorldPos = Hand.transform.position + dir * 1.3f;
             var targetPos = targetWorldPos - transform.position;
             var originalPos = Hand.transform.localPosition;
             // callback hell (:
