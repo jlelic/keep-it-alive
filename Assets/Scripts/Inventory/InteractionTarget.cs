@@ -6,27 +6,51 @@ public class InteractionTarget : MonoBehaviour
 {
     public string id;
 
-    private SpriteRenderer sr;
+    SpriteRenderer sr;
+    List<InteractiveItem> collidingItems = new List<InteractiveItem>();
 
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
     }
 
+    void Update()
+    {
+        bool foundHeldItem = false;
+        foreach(InteractiveItem item in collidingItems) {
+            if (item != null && item.IsBeingHeld()) 
+            {
+                foundHeldItem = true;
+                if (item != null && item.id == id) {
+                    sr.color = Color.green;
+                }
+                else
+                {
+                    sr.color = Color.red;
+                }
+            }
+        }
+        if (!foundHeldItem)
+        {
+            sr.color = Color.white;
+        }
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         InteractiveItem itemComponent = other.gameObject.GetComponent<InteractiveItem>();
-        if (itemComponent != null && itemComponent.id == id) {
-            sr.color = Color.green;
-        }
-        else
-        {
-            sr.color = Color.red;
-        }
+        collidingItems.Add(itemComponent);
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        sr.color = Color.white;
+        InteractiveItem itemComponent = other.gameObject.GetComponent<InteractiveItem>();
+        collidingItems.Remove(itemComponent);
+    }
+
+    public void DoTheStuff()
+    {
+        //TODO
+        Debug.Log("target " + id + " did its stuff");
     }
 }

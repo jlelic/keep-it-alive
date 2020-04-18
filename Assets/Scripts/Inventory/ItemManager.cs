@@ -5,14 +5,14 @@ using UnityEngine;
 public class ItemManager : MonoBehaviour
 {
     public float spawnInterval = 4.0f;
-    public GameObject[] items;
+    public GameObject[] items; //TOREMOVE
 
-    private float lastSpawn = 0;
-    private List<GameObject> spawnedItems = new List<GameObject>();
+    float lastSpawn = 0;
+    List<GameObject> spawnedItems = new List<GameObject>();
 
     void Update()
     {
-        if (Time.time - lastSpawn > spawnInterval) {
+        if (Time.time - lastSpawn > spawnInterval) { //TOREMOVE
             lastSpawn = Time.time;
             SpawnItem(null);
         }
@@ -25,7 +25,7 @@ public class ItemManager : MonoBehaviour
             spawnedItems.Add(item);
             return item;
         }
-        else if (items[0] != null)
+        else if (items[0] != null) //TOREMOVE
         {
             GameObject item = Instantiate(items[0], transform.position, transform.rotation);
             InteractiveItem itemComponent = item.GetComponent<InteractiveItem>();

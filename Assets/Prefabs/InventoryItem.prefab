@@ -150,3 +150,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0325bbd7bf7ca054a97cc1b0a9a22b91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 
+  distanceForceMultiplier: 400
