@@ -40,7 +40,7 @@ public class CarController : MonoBehaviour
             Hand.transform.rotation = Quaternion.LookRotation(Vector3.forward, perpendicular);
 
             var dir = (mousePos - Hand.transform.position).normalized;
-            var targetWorldPos = Hand.transform.position + dir * 1.3f;
+            var targetWorldPos = Hand.transform.position + dir * 5.3f;
             var targetPos = targetWorldPos - transform.position;
             var originalPos = Hand.transform.localPosition;
             // callback hell (:
