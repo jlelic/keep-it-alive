@@ -12,7 +12,7 @@ public class InteractiveItem : MonoBehaviour
     HingeJoint2D anchorHj2d;
 
     bool isBeingHeld = false;
-    InteractionTarget collidingTarget;
+    InteractionTarget hoveredTarget;
 
     void Start()
     {
@@ -33,35 +33,42 @@ public class InteractiveItem : MonoBehaviour
     void OnMouseDrag()
     {
         anchorHj2d.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos2D, Vector2.zero);
+        bool hoveredTargetFound = false;
+        foreach(RaycastHit2D hit in hits)
+        {
+            Debug.Log(hit);
+            if (hit.collider != null && hit.collider.gameObject.GetComponent<InteractionTarget>() != null)
+            {
+                hoveredTarget = hit.collider.gameObject.GetComponent<InteractionTarget>();
+                hoveredTarget.itemHoverEntered(itemType);
+                hoveredTargetFound = true;
+                break;
+            }
+        }
+        if (!hoveredTargetFound && hoveredTarget != null) {
+            hoveredTarget.itemHoverExit(itemType);
+            hoveredTarget = null;
+        }
     }
 
     void OnMouseUp()
     {
         isBeingHeld = false;
-        if (collidingTarget != null) {
+        if (hoveredTarget != null)
+        {
             GameManager.Instance.ApplyItem(itemType);
-            collidingTarget.DoTheStuff();
+            hoveredTarget.DoTheStuff();
+            hoveredTarget.itemHoverExit(itemType);
             Destroy(gameObject);
-        } else {
-            
-        }        
-        Vector3 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - anchorHj2d.transform.position;
-        Destroy(anchorHj2d.gameObject);
-        rb2d.AddForce(100 * direction, ForceMode2D.Impulse);
-    }
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        InteractionTarget targetComponent = other.gameObject.GetComponent<InteractionTarget>();
-        if (targetComponent != null && targetComponent.acceptsType == itemType) {
-            collidingTarget = targetComponent;
-        }
-    }
-    void OnTriggerExit2D(Collider2D other)
-    {
-        InteractionTarget targetComponent = other.gameObject.GetComponent<InteractionTarget>();
-        if (targetComponent != null && targetComponent.acceptsType == itemType) {
-            collidingTarget = null;
+        } else
+        {
+            Vector3 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - anchorHj2d.transform.position;
+            Destroy(anchorHj2d.gameObject);
+            rb2d.AddForce(100 * direction, ForceMode2D.Impulse);
         }
     }
 

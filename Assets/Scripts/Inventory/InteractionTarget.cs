@@ -9,45 +9,25 @@ public class InteractionTarget : MonoBehaviour
     private Color colorMatch = new Color(0, 1, 0, 0.5f);
     private Color colorNoMatch = new Color(1,0,0,0.5f);
     SpriteRenderer sr;
-    List<InteractiveItem> collidingItems = new List<InteractiveItem>();
 
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
     }
 
-    void Update()
+    public void itemHoverEntered(ItemType type)
     {
-        bool foundHeldItem = false;
-        foreach(InteractiveItem item in collidingItems) {
-            if (item != null && item.IsBeingHeld()) 
-            {
-                foundHeldItem = true;
-                if (item != null && item.itemType == acceptsType) {
-                    sr.color = colorMatch;
-                }
-                else
-                {
-                    sr.color = colorNoMatch;
-                }
-            }
-        }
-        if (!foundHeldItem)
+        if (type == acceptsType)
         {
-            sr.color = Color.clear;
+            sr.color = colorMatch;
+        } else 
+        {
+            sr.color = colorNoMatch;
         }
     }
-
-    void OnTriggerEnter2D(Collider2D other)
+    public void itemHoverExit(ItemType type)
     {
-        InteractiveItem itemComponent = other.gameObject.GetComponent<InteractiveItem>();
-        collidingItems.Add(itemComponent);
-    }
-
-    void OnTriggerExit2D(Collider2D other)
-    {
-        InteractiveItem itemComponent = other.gameObject.GetComponent<InteractiveItem>();
-        collidingItems.Remove(itemComponent);
+        sr.color = Color.clear;
     }
 
     public void DoTheStuff()
