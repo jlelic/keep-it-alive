@@ -27,6 +27,7 @@ public class Item : MonoBehaviour
     public void SpawnInventoryPrefab(int index)
     {
         if (itemManager != null && spawnPrefab != null) {
+            Debug.Log("YEAH");
             itemManager.SpawnItem(spawnPrefab, index);
         }
     }

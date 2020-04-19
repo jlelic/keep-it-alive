@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public float GasLevel { get; private set; } = 100f;
     public float GasConsumption { get; private set; } = 0.01f;
     public float WaterEvaporation { get; private set; } = 0.015f;
-    public float PowerConsumption { get; private set; } = 0.05f;
+    public float PowerConsumption { get; private set; } = 0.005f;
     public float HeatIncrease { get; private set; } = 0.05f;
     public float HeatLevel { get; private set; } = 20f;
     public float PowerLevel { get; private set; } = 100f;
@@ -24,9 +24,14 @@ public class GameManager : MonoBehaviour
     public float WiperWaterCost { get; private set; } = 24f;
     public float WiperPowerCost { get; private set; } = 2f;
     public float HitDamage { get; private set; } = 40f;
+    public int CoolingDown { get; private set; }
+    public int ChargingBattery { get; private set; }
 
     RoadsManager roadsManager;
     WiperManager wiperManager;
+    ParticleSystemsManager particleManager;
+
+    bool isOverheating;
 
     void Awake()
     {
@@ -45,6 +50,7 @@ public class GameManager : MonoBehaviour
         roadsManager = GetComponent<RoadsManager>();
         roadsManager.StartSpawning();
         wiperManager = GetComponent<WiperManager>();
+        particleManager = FindObjectOfType<ParticleSystemsManager>();
     }
 
     void Update()
@@ -88,6 +94,22 @@ public class GameManager : MonoBehaviour
 
         HeatLevel += HeatIncrease;
         HeatLevel = Mathf.Clamp(HeatLevel, 0, 100);
+        if (isOverheating)
+        {
+            if(HeatLevel < 80)
+            {
+                isOverheating = false;
+                particleManager.CoolDown();
+            }
+        }
+        else
+        {
+            if (HeatLevel > 80)
+            {
+                isOverheating = true;
+                particleManager.StartOverheating();
+            }
+        }
     }
 
     public void TakeHit()
@@ -105,17 +127,35 @@ public class GameManager : MonoBehaviour
         switch(itemType)
         {
             case ItemType.ICECREAM:
+                particleManager.ApplyIcecream();
                 StartCoroutine(ApplyIcecream());
+                break;
+            case ItemType.PHONE:
+                particleManager.ChargeBattery();
+                StartCoroutine(ApplyPhone());
                 break;
         }
     }
 
     private IEnumerator ApplyIcecream()
     {
+        CoolingDown++;
         for (int i = 0; i < 20; i++)
         {
             HeatLevel--;
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.05f);
         }
+        CoolingDown--;
+    }
+
+    private IEnumerator ApplyPhone()
+    {
+        ChargingBattery++;
+        for (int i = 0; i < 20; i++)
+        {
+            PowerLevel++;
+            yield return new WaitForSeconds(0.05f);
+        }
+        ChargingBattery--;
     }
 }

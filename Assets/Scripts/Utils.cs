@@ -7,7 +7,9 @@ using System;
 public enum ItemType
 {
     TRASH,
-    ICECREAM
+    ICECREAM,
+    PHONE,
+    WATER
 }
 
 public class Utils

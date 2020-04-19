@@ -13,6 +13,14 @@ public class UIManager : MonoBehaviour
     public RectTransform EngineBar;
 
     [SerializeField] Color historyBarColor;
+    [SerializeField] Color barContainerColor;
+    [SerializeField] Color barContainerImprovingColor;
+
+    Image gasContainer;
+    Image powerContainer;
+    Image waterContainer;
+    Image heatContainer;
+    Image engineContainer;
 
     RectTransform historyWaterBar;
     RectTransform historyEngineBar;
@@ -36,6 +44,12 @@ public class UIManager : MonoBehaviour
         GM = GameManager.Instance;
         historyWaterBar = MakeHistoryBar(WaterBar);
         historyEngineBar = MakeHistoryBar(EngineBar);
+
+        gasContainer = GasBar.parent.GetComponent<Image>();
+        powerContainer = PowerBar.parent.GetComponent<Image>();
+        waterContainer = WaterBar.parent.GetComponent<Image>();
+        heatContainer = HeatBar.parent.GetComponent<Image>();
+        engineContainer = EngineBar.parent.GetComponent<Image>();
     }
 
     private RectTransform MakeHistoryBar(RectTransform bar)
@@ -93,7 +107,8 @@ public class UIManager : MonoBehaviour
         }
         else if(GM.GasLevel > 20)
         {
-            iTween.Stop(GasBar.gameObject);
+            iTween.Stop(GasBar.parent.gameObject);
+            gasContainer.color = barContainerColor;
             gasWarning = false;
         }
 
@@ -112,9 +127,19 @@ public class UIManager : MonoBehaviour
         }
         else if (GM.PowerLevel > 15)
         {
-            iTween.Stop(PowerBar.gameObject);
+            iTween.Stop(PowerBar.parent.gameObject);
+            powerContainer.color = barContainerColor;
             powerWarning = false;
         }
+
+        if (GM.ChargingBattery > 0)
+        {
+            powerContainer.color = barContainerImprovingColor;
+        }
+        else if (powerContainer.color == barContainerImprovingColor) {
+            powerContainer.color = barContainerColor;
+        }
+
         PowerBar.sizeDelta = new Vector2(uiScale * GM.PowerLevel, PowerBar.sizeDelta.y);
     }
     private void UpdateWaterBar()
@@ -129,7 +154,8 @@ public class UIManager : MonoBehaviour
         }
         else if (GM.WaterLevel > GM.WiperWaterCost)
         {
-            iTween.Stop(WaterBar.gameObject);
+            iTween.Stop(WaterBar.parent.gameObject);
+            waterContainer.color = barContainerColor;
             waterWarning = false;
         }
 
@@ -141,16 +167,26 @@ public class UIManager : MonoBehaviour
     {
         if (!heatWarning)
         {
-            if (GM.HeatLevel > 90)
+            if (GM.HeatLevel > 80)
             {
                 StartWarning(HeatBar);
                 heatWarning = true;
             }
         }
-        else if (GM.HeatLevel < 90)
+        else if (GM.HeatLevel < 80)
         {
-            iTween.Stop(HeatBar.gameObject);
+            iTween.Stop(HeatBar.parent.gameObject);
+            heatContainer.color = barContainerColor;
             heatWarning = false;
+        }
+
+        if (GM.CoolingDown > 0)
+        {
+            heatContainer.color = barContainerImprovingColor;
+        }
+        else if (heatContainer.color == barContainerImprovingColor)
+        {
+            heatContainer.color = barContainerColor;
         }
 
         SetBarValue(HeatBar, GM.HeatLevel);
@@ -167,7 +203,8 @@ public class UIManager : MonoBehaviour
         }
         else if (GM.EngineLevel > GM.HitDamage)
         {
-            iTween.Stop(EngineBar.gameObject);
+            iTween.Stop(EngineBar.parent.gameObject);
+            engineContainer.color = barContainerColor;
             engineWarning = false;
         }
 
