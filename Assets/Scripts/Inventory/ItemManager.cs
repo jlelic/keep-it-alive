@@ -5,8 +5,6 @@ using UnityEngine;
 public class ItemManager : MonoBehaviour
 {
     public float windForceX = 0.0f;
-    public float shakeStrength = 0.0f;
-    public float shakeInterval = 1.0f;
     public GameObject inventoryContainer;
     public bool testing = false; //TOREMOVE
     public float spawnInterval = 4.0f; //TOREMOVE

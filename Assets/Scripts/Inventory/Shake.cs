@@ -4,21 +4,28 @@ using UnityEngine;
 
 public class Shake : MonoBehaviour
 {
-    public bool enabled = false;
+    public bool startTimed = false;
+    public bool shaking = false;
     public float shakeStrength = 0.1f;
     public float shakeInterval = 0.1f;
     
+    float shakeDuration;
     Vector3 originalPosition;
     float lastDestinationChange = 0.0f;
     Vector3 destination;
 
-    void Start() {
+    void Start()
+    {
         originalPosition = transform.position;
     }
 
     void Update()
     {
-        if (enabled && Time.time - lastDestinationChange > shakeInterval)
+        if (startTimed) {
+            startTimed = false;
+            TimedShake(1.0f);
+        }
+        if (shaking && Time.time - lastDestinationChange > shakeInterval)
         {
             lastDestinationChange = Time.time;
             Vector2 offset = Random.insideUnitCircle * shakeStrength;
@@ -28,10 +35,25 @@ public class Shake : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (enabled && destination.magnitude != 0)
+        if (shaking && destination.magnitude != 0)
         {
             Vector3 direction = destination - transform.position;
             transform.position += (0.1f / shakeInterval) * direction;
         }
+    }
+
+    public void TimedShake(float seconds)
+    {
+        shakeDuration = seconds;
+        StartCoroutine("ShakeNow");
+    }
+
+    IEnumerator ShakeNow()
+    {
+        originalPosition = transform.position;
+        shaking = true;
+        yield return new WaitForSeconds(shakeDuration);
+        shaking = false;
+        transform.position = originalPosition;
     }
 }
