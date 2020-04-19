@@ -19,7 +19,7 @@ public class ItemManager : MonoBehaviour
     {
         if (testing && Time.time - lastSpawn > spawnInterval) { //TOREMOVE
             lastSpawn = Time.time;
-            SpawnItem(null);
+            SpawnItem(null, 0);
         }
 
         List<GameObject> itemsToDestroy = new List<GameObject>();
@@ -51,18 +51,18 @@ public class ItemManager : MonoBehaviour
         
     }
 
-    public GameObject SpawnItem(GameObject itemToSpawn)
+    public GameObject SpawnItem(GameObject itemToSpawn, int index)
     {
         if (itemToSpawn != null) {
-            GameObject item = Instantiate(itemToSpawn, transform.position, transform.rotation);
+            GameObject item = Instantiate(itemToSpawn, transform.position+Vector3.up*(index+2)*0.8f, transform.rotation);
             spawnedItems.Add(item);
             return item;
         }
-        else if (testing && items[0] != null) //TOREMOVE
+        else if (testing && items.Length > 0) //TOREMOVE
         {
             GameObject item = Instantiate(items[0], transform.position, transform.rotation);
             InteractiveItem itemComponent = item.GetComponent<InteractiveItem>();
-            itemComponent.id = "zmrzlina";
+            itemComponent.itemType = ItemType.ICECREAM;
             spawnedItems.Add(item);
             return item;
         }

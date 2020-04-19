@@ -9,15 +9,16 @@ public class Hand : MonoBehaviour
     public void GrabItem(Item item)
     {
         grabbedItems.Add(item);
-        Destroy(item.GetComponent<Rigidbody2D>());
+//        Destroy(item.GetComponent<Rigidbody2D>());
         item.transform.parent = transform;
     }
 
     public void AddItemsToInventory()
     {
-        foreach(var item in grabbedItems)
-        {
-            item.SpawnInventoryPrefab();
+        for (int i = 0; i < grabbedItems.Count; i++)
+        { 
+            var item = grabbedItems[i];
+            item.SpawnInventoryPrefab(i);
             Destroy(item.gameObject);
         }
         grabbedItems.Clear();

@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    public ItemManager itemManager;
     public GameObject spawnPrefab;
+
+    ItemManager itemManager;
+
+    void Start()
+    {
+        itemManager = FindObjectOfType<ItemManager>();
+    }
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -16,10 +22,10 @@ public class Item : MonoBehaviour
         }
     }
 
-    public void SpawnInventoryPrefab()
+    public void SpawnInventoryPrefab(int index)
     {
         if (itemManager != null && spawnPrefab != null) {
-            itemManager.SpawnItem(spawnPrefab);
+            itemManager.SpawnItem(spawnPrefab, index);
         }
     }
 }

@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class InteractionTarget : MonoBehaviour
 {
-    public string id;
+    public ItemType acceptsType;
 
+    private Color colorMatch = new Color(0, 1, 0, 0.5f);
+    private Color colorNoMatch = new Color(1,0,0,0.5f);
     SpriteRenderer sr;
     List<InteractiveItem> collidingItems = new List<InteractiveItem>();
 
@@ -21,18 +23,18 @@ public class InteractionTarget : MonoBehaviour
             if (item != null && item.IsBeingHeld()) 
             {
                 foundHeldItem = true;
-                if (item != null && item.id == id) {
-                    sr.color = Color.green;
+                if (item != null && item.itemType == acceptsType) {
+                    sr.color = colorMatch;
                 }
                 else
                 {
-                    sr.color = Color.red;
+                    sr.color = colorNoMatch;
                 }
             }
         }
         if (!foundHeldItem)
         {
-            sr.color = Color.white;
+            sr.color = Color.clear;
         }
     }
 
@@ -51,6 +53,6 @@ public class InteractionTarget : MonoBehaviour
     public void DoTheStuff()
     {
         //TODO
-        Debug.Log("target " + id + " did its stuff");
+        Debug.Log("target " + acceptsType + " did its stuff");
     }
 }

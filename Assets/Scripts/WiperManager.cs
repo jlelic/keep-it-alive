@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,9 @@ public class WiperManager : MonoBehaviour
     [SerializeField] Image dirtOverlay;
     [SerializeField] Sprite[] maskSprites;
     [SerializeField] Sprite[] dirtSprites;
+    [SerializeField] RectTransform uiWiper;
+    [SerializeField] GameObject shipWiper;
+
 
     RectTransform maskTransform;
 
@@ -18,7 +22,7 @@ public class WiperManager : MonoBehaviour
 
     void Start()
     {
-        dirtOverlay.sprite = dirtSprites[dirtSprites.Length - 1];
+        dirtOverlay.sprite = dirtSprites[dirtSprites.Length-1];
         mask.sprite = maskSprites[0];
         maskTransform = mask.GetComponent<RectTransform>();
     }
@@ -38,14 +42,57 @@ public class WiperManager : MonoBehaviour
         dirtOverlay.sprite = dirtSprites[dirtLevel];
     }
 
-    public void Wipe()
+    public void Wipe(bool withWater)
     {
         if(IsWiping)
         {
             return;
         }
         IsWiping = true;
-        StartCoroutine(Wiping());
+
+        var wSize = uiWiper.sizeDelta;
+        uiWiper.gameObject.SetActive(true);
+        uiWiper.sizeDelta = new Vector2(2f * Screen.height * wSize.x / wSize.y, 2 * Screen.height);
+        uiWiper.anchoredPosition = new Vector2(0, 0);
+        uiWiper.rotation = Quaternion.Euler(new Vector3(0, 0, 130));
+        iTween.RotateAdd(uiWiper.gameObject, iTween.Hash(
+            "z", -220,
+            "time", 0.7f,
+            "easetype", iTween.EaseType.linear,
+//            "delay", 0.14f,
+            "oncomplete", (Action)(() => {
+                iTween.RotateAdd(uiWiper.gameObject,
+                    iTween.Hash(
+                        "z", 220,
+                        "time", 1,
+                        "easetype", iTween.EaseType.linear,
+                        "oncomplete", (Action)(() => {
+                            uiWiper.gameObject.SetActive(false);
+                            IsWiping = false;
+                        })
+                    )); ;
+            })
+        ));
+
+        iTween.RotateAdd(shipWiper.gameObject, iTween.Hash(
+            "z", 150,
+            "time", 0.7f,
+            "easetype", iTween.EaseType.linear,
+            //            "delay", 0.14f,
+            "oncomplete", (Action)(() => {
+                iTween.RotateAdd(shipWiper.gameObject,
+                    iTween.Hash(
+                        "z", -150,
+                        "time", 1,
+                        "easetype", iTween.EaseType.linear
+                    )); ;
+            })
+        ));
+
+        if(withWater)
+        {
+            StartCoroutine(Wiping());
+        }
     }
 
     IEnumerator Wiping()
@@ -58,6 +105,5 @@ public class WiperManager : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         dirtOverlay.sprite = dirtSprites[0];
         mask.sprite = maskSprites[0];
-        IsWiping = false;
     }
 }

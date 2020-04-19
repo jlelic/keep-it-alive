@@ -15,12 +15,14 @@ public class GameManager : MonoBehaviour
     public float GasLevel { get; private set; } = 100f;
     public float GasConsumption { get; private set; } = 0.01f;
     public float WaterEvaporation { get; private set; } = 0.015f;
-    public float PowerConsumption{ get; private set; } = 0.005f;
+    public float PowerConsumption { get; private set; } = 0.05f;
+    public float HeatIncrease { get; private set; } = 0.05f;
     public float HeatLevel { get; private set; } = 20f;
     public float PowerLevel { get; private set; } = 100f;
     public float WaterLevel { get; private set; } = 100f;
     public float EngineLevel { get; private set; } = 100f;
-    public float WiperWaterCost { get; private set; } = 20f;
+    public float WiperWaterCost { get; private set; } = 24f;
+    public float WiperPowerCost { get; private set; } = 2f;
     public float HitDamage { get; private set; } = 40f;
 
     RoadsManager roadsManager;
@@ -49,20 +51,26 @@ public class GameManager : MonoBehaviour
     {
         if (!wiperManager.IsWiping && Input.GetKeyDown(KeyCode.Space))
         {
+            if(PowerLevel < WiperPowerCost)
+            {
+                return;
+            }
             if(WaterLevel >= WiperWaterCost)
             {
                 WaterLevel -= WiperWaterCost;
-                wiperManager.Wipe();
             }
+            PowerLevel -= WiperPowerCost;
+            wiperManager.Wipe(WaterLevel >= WiperWaterCost);
         }
     }
 
     void FixedUpdate()
     {
         MaxSpeed = EngineLevel > 40 ? ActualMaxSpeed : ActualMaxSpeed * EngineLevel / 40f;
+        EngineLevel = Mathf.Clamp(EngineLevel, 0, 100);
 
         GasLevel -= GasConsumption;
-        GasLevel = Mathf.Max(GasLevel, 0);
+        GasLevel = Mathf.Clamp(GasLevel, 0, 100);
         if (GasLevel <= 0)
         {
             CarSpeed = Mathf.Max(0f, CarSpeed-SlowDown);
@@ -73,10 +81,13 @@ public class GameManager : MonoBehaviour
 
 
         PowerLevel -= PowerConsumption;
-        PowerLevel = Mathf.Max(PowerLevel, 0);
+        PowerLevel = Mathf.Clamp(PowerLevel, 0, 100);
 
         WaterLevel -= HeatLevel > 50 ? HeatLevel /100f * WaterEvaporation : 0;
-        WaterLevel = Mathf.Max(WaterLevel, 0);
+        WaterLevel = Mathf.Clamp(WaterLevel, 0, 100);
+
+        HeatLevel += HeatIncrease;
+        HeatLevel = Mathf.Clamp(HeatLevel, 0, 100);
     }
 
     public void TakeHit()
@@ -87,5 +98,24 @@ public class GameManager : MonoBehaviour
     public void DirtyWindow()
     {
         wiperManager.Dirty();
+    }
+
+    public void ApplyItem(ItemType itemType)
+    {
+        switch(itemType)
+        {
+            case ItemType.ICECREAM:
+                StartCoroutine(ApplyIcecream());
+                break;
+        }
+    }
+
+    private IEnumerator ApplyIcecream()
+    {
+        for (int i = 0; i < 20; i++)
+        {
+            HeatLevel--;
+            yield return new WaitForSeconds(0.1f);
+        }
     }
 }

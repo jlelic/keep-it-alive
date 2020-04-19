@@ -6,9 +6,9 @@ using UnityEngine.UI;
 
 public class CarController : MonoBehaviour
 {
-    public GameObject Hand;
     [SerializeField] SpriteRenderer leftFire;
     [SerializeField] SpriteRenderer rightFire;
+    [SerializeField] Animator tentacleAnimator;
     float TurningSpeed = 30;
     bool canUseHand = true;
     Hand hand;
@@ -51,23 +51,26 @@ public class CarController : MonoBehaviour
             var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePos -= new Vector3(0, 0, mousePos.z);
             Vector3 perpendicular = Vector3.Cross(transform.position - mousePos, Vector3.forward);
-            Hand.transform.rotation = Quaternion.LookRotation(Vector3.forward, perpendicular);
+            var rotation = Quaternion.LookRotation(Vector3.forward, perpendicular);
+            hand.transform.rotation = rotation;
+            tentacleAnimator.transform.rotation = rotation;
+            tentacleAnimator.Play("tentacle");
 
-            var dir = (mousePos - Hand.transform.position).normalized;
-            var targetWorldPos = Hand.transform.position + dir * 5.3f;
+            var dir = (mousePos - hand.transform.position).normalized;
+            var targetWorldPos = hand.transform.position + dir * 5.3f;
             var targetPos = targetWorldPos - transform.position;
-            var originalPos = Hand.transform.localPosition;
+            var originalPos = hand.transform.localPosition;
             // callback hell (:
-            iTween.MoveTo(Hand, 
+            iTween.MoveTo(hand.gameObject, 
                 iTween.Hash(
                     "position", targetPos,
-                    "time", 1,
+                    "time", 0.6f,
                     "isLocal", true,
                     "oncomplete", (Action)(() => {
-                        iTween.MoveTo(Hand,
+                        iTween.MoveTo(hand.gameObject,
                             iTween.Hash(
                                 "position", originalPos,
-                                "time", 0.6f,
+                                "time", 0.4f,
                                 "isLocal", true,
                                 "oncomplete", (Action)(() => {
                                     canUseHand = true;

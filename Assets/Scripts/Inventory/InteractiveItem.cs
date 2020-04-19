@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class InteractiveItem : MonoBehaviour
 {
-    public string id;
+    public ItemType itemType;
 
     Rigidbody2D rb2d;
     GameObject anchorPrefab;
@@ -39,6 +39,7 @@ public class InteractiveItem : MonoBehaviour
     {
         isBeingHeld = false;
         if (collidingTarget != null) {
+            GameManager.Instance.ApplyItem(itemType);
             collidingTarget.DoTheStuff();
             Destroy(gameObject);
         } else {
@@ -52,14 +53,14 @@ public class InteractiveItem : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         InteractionTarget targetComponent = other.gameObject.GetComponent<InteractionTarget>();
-        if (targetComponent != null && targetComponent.id == id) {
+        if (targetComponent != null && targetComponent.acceptsType == itemType) {
             collidingTarget = targetComponent;
         }
     }
     void OnTriggerExit2D(Collider2D other)
     {
         InteractionTarget targetComponent = other.gameObject.GetComponent<InteractionTarget>();
-        if (targetComponent != null && targetComponent.id == id) {
+        if (targetComponent != null && targetComponent.acceptsType == itemType) {
             collidingTarget = null;
         }
     }

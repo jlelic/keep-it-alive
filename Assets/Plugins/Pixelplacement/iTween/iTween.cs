@@ -6760,6 +6760,10 @@ public class iTween : MonoBehaviour
 			{
 				((System.Action)tweenArguments[callbackType]).Invoke();
 			}
+			else if (tweenArguments[callbackType] is Action<Color>)
+			{
+				((Action<Color>)tweenArguments[callbackType]).Invoke((Color)tweenArguments[callbackType + "params"]);
+			}
 			else
 			{
 				Debug.LogError("iTween Error: Callback method references must be passed as a String!");
