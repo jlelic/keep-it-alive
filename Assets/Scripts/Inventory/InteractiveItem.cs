@@ -40,7 +40,6 @@ public class InteractiveItem : MonoBehaviour
         bool hoveredTargetFound = false;
         foreach(RaycastHit2D hit in hits)
         {
-            Debug.Log(hit);
             if (hit.collider != null && hit.collider.gameObject.GetComponent<InteractionTarget>() != null)
             {
                 hoveredTarget = hit.collider.gameObject.GetComponent<InteractionTarget>();
@@ -58,7 +57,7 @@ public class InteractiveItem : MonoBehaviour
     void OnMouseUp()
     {
         isBeingHeld = false;
-        if (hoveredTarget != null)
+        if (hoveredTarget != null && hoveredTarget.acceptsType == itemType)
         {
             GameManager.Instance.ApplyItem(itemType);
             hoveredTarget.DoTheStuff();
@@ -66,6 +65,10 @@ public class InteractiveItem : MonoBehaviour
             Destroy(gameObject);
         } else
         {
+            if (hoveredTarget != null)
+            {
+                hoveredTarget.itemHoverExit(itemType);
+            }
             Vector3 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - anchorHj2d.transform.position;
             Destroy(anchorHj2d.gameObject);
             rb2d.AddForce(100 * direction, ForceMode2D.Impulse);

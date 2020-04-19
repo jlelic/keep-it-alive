@@ -7,6 +7,17 @@ public class Ship : MonoBehaviour
     public ParticleSystem impactParticleEffect;
     public Shake cameraShake;
 
+    SpriteRenderer sr;
+    bool invulnerable = false;
+    float invulnerabilityDuration = 1.7f;
+    Color invulnerabilityColor = Color.cyan;
+
+    void Start()
+    {
+        sr = gameObject.GetComponent<SpriteRenderer>();
+        invulnerabilityColor.a = 0.75f;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.rigidbody == null)
@@ -16,8 +27,12 @@ public class Ship : MonoBehaviour
 
         if (collision.rigidbody.gameObject.GetComponent<EnemyCar>() != null)
         {
-            GameManager.Instance.TakeHit();
-            GameManager.Instance.DirtyWindow();
+            if (!invulnerable) {
+                GameManager.Instance.TakeHit();
+                GameManager.Instance.DirtyWindow();
+                StartCoroutine("MakeInvulnerable");
+            }
+            
 
             if (impactParticleEffect != null)
             {
@@ -30,4 +45,13 @@ public class Ship : MonoBehaviour
         }
     }
 
+    IEnumerator MakeInvulnerable()
+    {
+        invulnerable = true;
+        Utils.tweenColor(sr, invulnerabilityColor, 0.3f, 0, iTween.EaseType.easeInOutQuad, iTween.LoopType.pingPong);
+        yield return new WaitForSeconds(invulnerabilityDuration);
+        invulnerable = false;
+        iTween.Stop(gameObject);
+        sr.color = Color.white;
+    }
 }

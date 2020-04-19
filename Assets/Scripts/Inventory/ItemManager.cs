@@ -41,7 +41,6 @@ public class ItemManager : MonoBehaviour
         {
             if (spawnedItem != null && windForceX != 0)
             {
-                Debug.Log("err");
                 Rigidbody2D itemRb2D = spawnedItem.GetComponent<Rigidbody2D>();
                 itemRb2D.AddForce(new Vector2(windForceX, 0));
             }

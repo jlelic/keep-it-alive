@@ -36,6 +36,23 @@ public class Utils
         ));
     }
 
+    public static void tweenColor(SpriteRenderer sprite, Color color, float time, float delay = 0, EaseType easeType = EaseType.linear, LoopType loopType = LoopType.none, bool ignoreTimeScale = false)
+    {
+        ValueTo(sprite.gameObject, Hash(
+         "from", sprite.color,
+         "to", color,
+         "delay", delay,
+         "time", time,
+         "looptype", loopType,
+         "easetype", easeType,
+         "ignoretimescale", ignoreTimeScale,
+         "onupdate", (Action<Color>)(newColor =>
+         {
+             sprite.color = newColor;
+         })
+        ));
+    }
+
     public static string ToTimeString(float seconds)
     {
         int m = Mathf.FloorToInt(seconds / 60F);
