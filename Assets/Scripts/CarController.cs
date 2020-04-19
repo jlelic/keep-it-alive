@@ -39,7 +39,7 @@ public class CarController : MonoBehaviour
             leftFire.color = Color.clear;
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !ClickedInventoryItem())
         {
             if(!canUseHand)
             {
@@ -80,5 +80,20 @@ public class CarController : MonoBehaviour
                     })
                 ));
         }
+    }
+
+    bool ClickedInventoryItem() {
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+        
+        RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos2D, Vector2.zero);
+        foreach (RaycastHit2D hit in hits)
+        {
+            if (hit.collider != null && hit.collider.gameObject.layer == 8)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
