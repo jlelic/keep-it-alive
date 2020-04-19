@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2126167064086615088}
   - component: {fileID: 6999387796714731457}
   - component: {fileID: 1420666539586851882}
+  - component: {fileID: 4828130955962435740}
   m_Layer: 8
   m_Name: PhoneRinging
   m_TagString: Untagged
@@ -164,3 +165,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4828130955962435740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9220902346522626812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89959c09b65864c41a87fded0325718d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startTimed: 0
+  shaking: 1
+  getCrazy: 1
+  shakeStrength: 0.1
+  shakeInterval: 0.07

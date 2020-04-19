@@ -6,6 +6,7 @@ public class Shake : MonoBehaviour
 {
     public bool startTimed = false;
     public bool shaking = false;
+    public bool getCrazy = false;
     public float shakeStrength = 0.1f;
     public float shakeInterval = 0.1f;
     
@@ -29,7 +30,12 @@ public class Shake : MonoBehaviour
         {
             lastDestinationChange = Time.time;
             Vector2 offset = Random.insideUnitCircle * shakeStrength;
-            destination = originalPosition + new Vector3(offset.x, offset.y, originalPosition.z);
+            var targetPosition = originalPosition;
+            if(getCrazy)
+            {
+                targetPosition = transform.position;
+            }
+            destination = targetPosition + new Vector3(offset.x, offset.y, 0);
         }
     }
 

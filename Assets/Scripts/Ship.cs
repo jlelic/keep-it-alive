@@ -9,7 +9,7 @@ public class Ship : MonoBehaviour
 
     SpriteRenderer sr;
     bool invulnerable = false;
-    float invulnerabilityDuration = 1.7f;
+    float invulnerabilityDuration = 5f;
     Color invulnerabilityColor = Color.cyan;
 
     void Start()

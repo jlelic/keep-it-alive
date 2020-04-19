@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     public float HitDamage { get; private set; } = 40f;
     public int CoolingDown { get; private set; }
     public int ChargingBattery { get; private set; }
+    public int RefillingWater { get; private set; }
 
     RoadsManager roadsManager;
     WiperManager wiperManager;
@@ -61,12 +62,12 @@ public class GameManager : MonoBehaviour
             {
                 return;
             }
-            if(WaterLevel >= WiperWaterCost)
+            PowerLevel -= WiperPowerCost;
+            wiperManager.Wipe(WaterLevel >= WiperWaterCost);
+            if (WaterLevel >= WiperWaterCost)
             {
                 WaterLevel -= WiperWaterCost;
             }
-            PowerLevel -= WiperPowerCost;
-            wiperManager.Wipe(WaterLevel >= WiperWaterCost);
         }
     }
 
@@ -134,6 +135,10 @@ public class GameManager : MonoBehaviour
                 particleManager.ChargeBattery();
                 StartCoroutine(ApplyPhone());
                 break;
+            case ItemType.WATER:
+                particleManager.RefillWater();
+                StartCoroutine(ApplyWater());
+                break;
         }
     }
 
@@ -157,5 +162,16 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
         ChargingBattery--;
+    }
+
+    private IEnumerator ApplyWater()
+    {
+        RefillingWater++;
+        for (int i = 0; i < 20; i++)
+        {
+            WaterLevel++;
+            yield return new WaitForSeconds(0.05f);
+        }
+        RefillingWater--;
     }
 }

@@ -11,6 +11,6 @@ public class AdustPosition : MonoBehaviour
     {
         float cameraBottom = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).y;
         float cameraRight = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x;
-        transform.position = new Vector3(cameraRight - rightOffset, cameraBottom + bottomOffset, 0);
+        transform.position = new Vector3(cameraRight - rightOffset, cameraBottom + bottomOffset, transform.position.z);
     }
 }

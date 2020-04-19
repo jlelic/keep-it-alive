@@ -8,7 +8,6 @@ public class Hand : MonoBehaviour
 
     public void GrabItem(Item item)
     {
-        Debug.Log(item.gameObject);
         grabbedItems.Add(item);
 //        Destroy(item.GetComponent<Rigidbody2D>());
         item.transform.parent = transform;

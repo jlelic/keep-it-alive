@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class WiperManager : MonoBehaviour
 {
     [SerializeField] Image mask;
+    [SerializeField] Image water;
     [SerializeField] Image dirtOverlay;
     [SerializeField] Sprite[] maskSprites;
     [SerializeField] Sprite[] dirtSprites;
@@ -55,9 +56,18 @@ public class WiperManager : MonoBehaviour
         uiWiper.sizeDelta = new Vector2(2f * Screen.height * wSize.x / wSize.y, 2 * Screen.height);
         uiWiper.anchoredPosition = new Vector2(0, 0);
         uiWiper.rotation = Quaternion.Euler(new Vector3(0, 0, 130));
+
+        if (withWater)
+        {
+            water.gameObject.SetActive(true);
+            water.color = Color.clear;
+            Utils.tweenColor(water, Color.white, 0.2f);
+        }
+             
         iTween.RotateAdd(uiWiper.gameObject, iTween.Hash(
             "z", -220,
             "time", 0.7f,
+            "delay", 0.3f,
             "easetype", iTween.EaseType.linear,
 //            "delay", 0.14f,
             "oncomplete", (Action)(() => {
@@ -77,6 +87,7 @@ public class WiperManager : MonoBehaviour
         iTween.RotateAdd(shipWiper.gameObject, iTween.Hash(
             "z", 150,
             "time", 0.7f,
+            "delay", 0.5f,
             "easetype", iTween.EaseType.linear,
             //            "delay", 0.14f,
             "oncomplete", (Action)(() => {
@@ -97,6 +108,7 @@ public class WiperManager : MonoBehaviour
 
     IEnumerator Wiping()
     {
+        yield return new WaitForSeconds(0.5f);
         for (int i = 0; i < maskSprites.Length; i++)
         {
             yield return new WaitForSeconds(0.05f);
@@ -105,5 +117,6 @@ public class WiperManager : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         dirtOverlay.sprite = dirtSprites[0];
         mask.sprite = maskSprites[0];
+        water.gameObject.SetActive(false);
     }
 }

@@ -7,6 +7,7 @@ public class ParticleSystemsManager : MonoBehaviour
     [SerializeField] ParticleSystem engineSmoke;
     [SerializeField] ParticleSystem engineVapor;
     [SerializeField] ParticleSystem batterySparks;
+    [SerializeField] ParticleSystem bubbles;
 
     public void StartOverheating()
     {
@@ -26,6 +27,11 @@ public class ParticleSystemsManager : MonoBehaviour
     public void ChargeBattery()
     {
         batterySparks.Play();
+    }
+
+    public void RefillWater()
+    {
+        bubbles.Play();
     }
 
 
