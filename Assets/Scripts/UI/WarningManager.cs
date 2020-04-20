@@ -12,7 +12,6 @@ public class WarningManager : MonoBehaviour
 
     void Start()
     {
-        addWarning(WarningMessageType.ENERGY_LOW);
     }
 
     public void addWarning(WarningMessageType type)
