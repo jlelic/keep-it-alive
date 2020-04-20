@@ -42,6 +42,10 @@ public class InteractiveItem : MonoBehaviour
         {
             if (hit.collider != null && hit.collider.gameObject.GetComponent<InteractionTarget>() != null)
             {
+                if (hoveredTarget != null && hoveredTarget != hit.collider.gameObject.GetComponent<InteractionTarget>())
+                {
+                    hoveredTarget.itemHoverExit(itemType);
+                }
                 hoveredTarget = hit.collider.gameObject.GetComponent<InteractionTarget>();
                 hoveredTarget.itemHoverEntered(itemType);
                 hoveredTargetFound = true;
