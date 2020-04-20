@@ -16,17 +16,18 @@ public class GameManager : MonoBehaviour
     public float GasConsumption { get; private set; } = 0.01f;
     public float WaterEvaporation { get; private set; } = 0.015f;
     public float PowerConsumption { get; private set; } = 0.005f;
-    public float HeatIncrease { get; private set; } = 0.05f;
+    public float HeatIncrease { get; private set; } = 0.02f;
     public float HeatLevel { get; private set; } = 20f;
     public float PowerLevel { get; private set; } = 100f;
     public float WaterLevel { get; private set; } = 100f;
     public float EngineLevel { get; private set; } = 100f;
     public float WiperWaterCost { get; private set; } = 24f;
     public float WiperPowerCost { get; private set; } = 2f;
-    public float HitDamage { get; private set; } = 40f;
+    public float HitDamage { get; private set; } = 30;
     public int CoolingDown { get; private set; }
     public int ChargingBattery { get; private set; }
     public int RefillingWater { get; private set; }
+    public int Repairing { get; private set; }
 
     RoadsManager roadsManager;
     WiperManager wiperManager;
@@ -90,7 +91,7 @@ public class GameManager : MonoBehaviour
         PowerLevel -= PowerConsumption;
         PowerLevel = Mathf.Clamp(PowerLevel, 0, 100);
 
-        WaterLevel -= HeatLevel > 50 ? HeatLevel /100f * WaterEvaporation : 0;
+        WaterLevel -= HeatLevel > 80 ? (HeatLevel-80) /20f * WaterEvaporation : 0;
         WaterLevel = Mathf.Clamp(WaterLevel, 0, 100);
 
         HeatLevel += HeatIncrease;
@@ -139,13 +140,17 @@ public class GameManager : MonoBehaviour
                 particleManager.RefillWater();
                 StartCoroutine(ApplyWater());
                 break;
+            case ItemType.WRENCH:
+                particleManager.Repair();
+                StartCoroutine(ApplyWrench());
+                break;
         }
     }
 
     private IEnumerator ApplyIcecream()
     {
         CoolingDown++;
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 25; i++)
         {
             HeatLevel--;
             yield return new WaitForSeconds(0.05f);
@@ -173,5 +178,16 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
         RefillingWater--;
+    }
+
+    private IEnumerator ApplyWrench()
+    {
+        Repairing++;
+        for (int i = 0; i < 35; i++)
+        {
+            EngineLevel++;
+            yield return new WaitForSeconds(0.05f);
+        }
+        Repairing--;
     }
 }

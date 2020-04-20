@@ -9,7 +9,8 @@ public enum ItemType
     TRASH,
     ICECREAM,
     PHONE,
-    WATER
+    WATER,
+    WRENCH,
 }
 
 public class Utils

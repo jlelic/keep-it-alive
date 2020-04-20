@@ -8,7 +8,7 @@ public class WiperManager : MonoBehaviour
 {
     [SerializeField] Image mask;
     [SerializeField] Image water;
-    [SerializeField] Image dirtOverlay;
+    [SerializeField] Image[] dirtOverlay;
     [SerializeField] Sprite[] maskSprites;
     [SerializeField] Sprite[] dirtSprites;
     [SerializeField] RectTransform uiWiper;
@@ -16,6 +16,7 @@ public class WiperManager : MonoBehaviour
 
 
     RectTransform maskTransform;
+    int dIndex = 0; 
 
     public bool IsWiping { get; private set; }
 
@@ -23,24 +24,34 @@ public class WiperManager : MonoBehaviour
 
     void Start()
     {
-        dirtOverlay.sprite = dirtSprites[dirtSprites.Length-1];
+        dirtOverlay[dIndex].gameObject.SetActive(true);
+        dirtOverlay[dIndex + 1].gameObject.SetActive(true);
+        dirtOverlay[dIndex].sprite = dirtSprites[0];
+        dirtOverlay[dIndex+1].sprite = dirtSprites[0];
         mask.sprite = maskSprites[0];
         maskTransform = mask.GetComponent<RectTransform>();
     }
 
-    IEnumerator GetDirty()
-    {
-        yield return new WaitForSeconds(3);
-        dirtOverlay.sprite = dirtSprites[1];
-    }
-
     public void Dirty()
     {
+        if (IsWiping)
+        {
+            return;
+        }
+        var nextIndex = (dIndex + 1) % 2;
         if(dirtLevel < dirtSprites.Length - 1)
         {
             dirtLevel++;
         }
-        dirtOverlay.sprite = dirtSprites[dirtLevel];
+        else
+        {
+            return;
+        }
+        dirtOverlay[nextIndex].sprite = dirtSprites[dirtLevel];
+        dirtOverlay[nextIndex].color = Color.clear;
+        Utils.tweenColor(dirtOverlay[nextIndex], Color.white, 0.2f,0,iTween.EaseType.easeOutCubic);
+        Utils.tweenColor(dirtOverlay[dIndex], Color.clear, 0.2f, 0,iTween.EaseType.easeInCubic);
+        dIndex = nextIndex;
     }
 
     public void Wipe(bool withWater)
@@ -79,6 +90,7 @@ public class WiperManager : MonoBehaviour
                         "oncomplete", (Action)(() => {
                             uiWiper.gameObject.SetActive(false);
                             IsWiping = false;
+                            dirtLevel = 0;
                         })
                     )); ;
             })
@@ -115,7 +127,7 @@ public class WiperManager : MonoBehaviour
             mask.sprite = maskSprites[i];
         }
         yield return new WaitForSeconds(0.1f);
-        dirtOverlay.sprite = dirtSprites[0];
+        dirtOverlay[dIndex].sprite = dirtSprites[0];
         mask.sprite = maskSprites[0];
         water.gameObject.SetActive(false);
     }

@@ -208,6 +208,16 @@ public class UIManager : MonoBehaviour
             engineWarning = false;
         }
 
+
+        if (GM.Repairing > 0)
+        {
+            engineContainer.color = barContainerImprovingColor;
+        }
+        else if (engineContainer.color == barContainerImprovingColor)
+        {
+            engineContainer.color = barContainerColor;
+        }
+
         SetBarValue(historyEngineBar, lastOldEngineLevel);
         SetBarValue(EngineBar, GM.EngineLevel);
     }
