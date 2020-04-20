@@ -19,6 +19,11 @@ public class Item : MonoBehaviour
         var hand = other.GetComponent<Hand>();
         if(hand != null && !hasBeenGrabbed)
         {
+            var parentPerson = GetComponentInParent<SaddablePerson>();
+            if (parentPerson != null)
+            {
+                parentPerson.MakeSad();
+            }
             hand.GrabItem(this);
             hasBeenGrabbed = true;
         }
