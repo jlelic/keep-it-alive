@@ -11,6 +11,7 @@ public enum ItemType
     PHONE,
     WATER,
     WRENCH,
+    GAS,
 }
 
 public class Utils

@@ -112,6 +112,15 @@ public class UIManager : MonoBehaviour
             gasWarning = false;
         }
 
+        if (GM.RefillingGas > 0)
+        {
+            gasContainer.color = barContainerImprovingColor;
+        }
+        else if (gasContainer.color == barContainerImprovingColor)
+        {
+            gasContainer.color = barContainerColor;
+        }
+
         GasBarContainer.sizeDelta = new Vector2(uiScale * GM.GasCapacity + 20, GasBarContainer.sizeDelta.y);
         SetBarValue(GasBar, GM.GasLevel);
     }

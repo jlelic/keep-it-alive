@@ -10,8 +10,11 @@ public class ParticleSystemsManager : MonoBehaviour
     [SerializeField] ParticleSystem bubbles;
     [SerializeField] ParticleSystem dirt;
     [SerializeField] Animator wrench;
+    [SerializeField] Animator gas;
+    [SerializeField] SpriteRenderer icecream;
 
     int wrenches = 0;
+    int refilling = 0;
 
     public void StartOverheating()
     {
@@ -26,6 +29,9 @@ public class ParticleSystemsManager : MonoBehaviour
     public void ApplyIcecream()
     {
         engineVapor.Play();
+        icecream.gameObject.SetActive(true);
+        icecream.color = Color.white;
+        Utils.tweenColor(icecream, Color.clear, 1, 1);
     }
 
     public void ChargeBattery()
@@ -55,9 +61,27 @@ public class ParticleSystemsManager : MonoBehaviour
     {
         yield return new WaitForSeconds(2);
         wrenches--;
-        if(wrenches == 0)
+        if (wrenches == 0)
         {
             wrench.gameObject.SetActive(false);
+        }
+    }
+
+    public void RefillGass()
+    {
+        refilling++;
+        gas.gameObject.SetActive(true);
+        gas.Play("GasRefill");
+        StartCoroutine(StopGasRefill());
+    }
+
+    IEnumerator StopGasRefill()
+    {
+        yield return new WaitForSeconds(2);
+        refilling--;
+        if (refilling == 0)
+        {
+            gas.gameObject.SetActive(false);
         }
     }
 

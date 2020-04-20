@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     public int CoolingDown { get; private set; }
     public int ChargingBattery { get; private set; }
     public int RefillingWater { get; private set; }
+    public int RefillingGas{ get; private set; }
     public int Repairing { get; private set; }
 
     RoadsManager roadsManager;
@@ -144,6 +145,10 @@ public class GameManager : MonoBehaviour
                 particleManager.Repair();
                 StartCoroutine(ApplyWrench());
                 break;
+            case ItemType.GAS:
+                particleManager.RefillGass();
+                StartCoroutine(ApplyGas());
+                break;
         }
     }
 
@@ -189,5 +194,15 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
         Repairing--;
+    }
+    private IEnumerator ApplyGas()
+    {
+        RefillingGas++;
+        for (int i = 0; i < 20; i++)
+        {
+            GasLevel++;
+            yield return new WaitForSeconds(0.05f);
+        }
+        RefillingGas--;
     }
 }
