@@ -30,6 +30,7 @@ public class UIManager : MonoBehaviour
     float lastOldEngineLevel = 100;
 
     GameManager GM;
+    WarningManager warningManager;
 
     float uiScale = 1;
 
@@ -42,6 +43,7 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         GM = GameManager.Instance;
+        warningManager = FindObjectOfType<WarningManager>();
         historyWaterBar = MakeHistoryBar(WaterBar);
         historyEngineBar = MakeHistoryBar(EngineBar);
 
@@ -103,12 +105,14 @@ public class UIManager : MonoBehaviour
             {
                 StartWarning(GasBar);
                 gasWarning = true;
+                warningManager.addWarning(WarningMessageType.GAS_LOW);
             }
         }
         else if(GM.GasLevel > 20)
         {
             iTween.Stop(GasBar.parent.gameObject);
             gasContainer.color = barContainerColor;
+            warningManager.removeWarning(WarningMessageType.GAS_LOW);
             gasWarning = false;
         }
 
@@ -132,6 +136,7 @@ public class UIManager : MonoBehaviour
             {
                 StartWarning(PowerBar);
                 powerWarning = true;
+                warningManager.addWarning(WarningMessageType.POWER_LOW);
             }
         }
         else if (GM.PowerLevel > 15)
@@ -139,6 +144,7 @@ public class UIManager : MonoBehaviour
             iTween.Stop(PowerBar.parent.gameObject);
             powerContainer.color = barContainerColor;
             powerWarning = false;
+            warningManager.removeWarning(WarningMessageType.POWER_LOW);
         }
 
         if (GM.ChargingBattery > 0)
@@ -159,6 +165,7 @@ public class UIManager : MonoBehaviour
             {
                 StartWarning(WaterBar);
                 waterWarning = true;
+                warningManager.addWarning(WarningMessageType.WATER_LOW);
             }
         }
         else if (GM.WaterLevel > GM.WiperWaterCost)
@@ -166,6 +173,7 @@ public class UIManager : MonoBehaviour
             iTween.Stop(WaterBar.parent.gameObject);
             waterContainer.color = barContainerColor;
             waterWarning = false;
+            warningManager.removeWarning(WarningMessageType.WATER_LOW);
         }
 
         historyWaterBar.sizeDelta = new Vector2(uiScale * GM.WaterLevel, WaterBar.sizeDelta.y);
@@ -180,6 +188,7 @@ public class UIManager : MonoBehaviour
             {
                 StartWarning(HeatBar);
                 heatWarning = true;
+                warningManager.addWarning(WarningMessageType.OVERHEATING);
             }
         }
         else if (GM.HeatLevel < 80)
@@ -187,6 +196,7 @@ public class UIManager : MonoBehaviour
             iTween.Stop(HeatBar.parent.gameObject);
             heatContainer.color = barContainerColor;
             heatWarning = false;
+            warningManager.removeWarning(WarningMessageType.OVERHEATING);
         }
 
         if (GM.CoolingDown > 0)
@@ -208,6 +218,7 @@ public class UIManager : MonoBehaviour
             {
                 StartWarning(EngineBar);
                 engineWarning = true;
+                warningManager.addWarning(WarningMessageType.ENGINE_CRITICAL);
             }
         }
         else if (GM.EngineLevel > GM.HitDamage)
@@ -215,6 +226,7 @@ public class UIManager : MonoBehaviour
             iTween.Stop(EngineBar.parent.gameObject);
             engineContainer.color = barContainerColor;
             engineWarning = false;
+            warningManager.removeWarning(WarningMessageType.ENGINE_CRITICAL);
         }
 
 

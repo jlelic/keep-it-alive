@@ -1,9 +1,14 @@
 ﻿
 public enum WarningMessageType
 {
+    ENGINE_CRITICAL,
+    ENGINE_DAMAGED,
     GAS_LEAK,
     GAS_LOW,
-    OVERHEAT,
-    ENERGY_LOW,
+    OVERHEATING,
+    POWER_LOW,
+    POWER_INSUFFICIENT,
+    POWER_ZERO,
+    WATER_LOW,
     WATER_INSUFFICIENT
 }

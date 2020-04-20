@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2796453157105071786}
   - component: {fileID: 8612287207538113186}
   m_Layer: 0
-  m_Name: RandomKidItem
+  m_Name: RandomItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,14 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba8cd00183ef70846a22f6a35b7af73b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemPrefabs:
-  - {fileID: 7776041288940934233, guid: 1a3f8a409ce0740429d8a2cd800d90b0, type: 3}
-  - {fileID: 7776041288940934233, guid: 1a3f8a409ce0740429d8a2cd800d90b0, type: 3}
-  - {fileID: 7776041288940934233, guid: 831100297ea379d49bc29c9700a0157a, type: 3}
-  - {fileID: 7776041288940934233, guid: 4c0bb4160ee990648b78c14299637749, type: 3}
-  - {fileID: 7776041288940934233, guid: 8b7032342d7b4424f887c7945160f2dc, type: 3}
-  - {fileID: 7776041288940934233, guid: 7c3c6c8dabeca2649b33f2a2e2b75e71, type: 3}
-  - {fileID: 7776041288940934233, guid: 381213318595ddc4dabdb6ebd26e8a92, type: 3}
+  itemPrefabs: []
 --- !u!1 &8642643177605282568
 GameObject:
   m_ObjectHideFlags: 0
@@ -77,7 +70,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8642643177605282568}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.003, y: 0.002, z: -3}
+  m_LocalPosition: {x: 0, y: 0, z: -3}
   m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 2796453157105071786}
@@ -122,7 +115,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 413823b57b1ee26449474b29f4b131f5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6302a83dc7790384faa314bcec5d742f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

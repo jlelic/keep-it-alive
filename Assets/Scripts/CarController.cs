@@ -39,7 +39,7 @@ public class CarController : MonoBehaviour
             leftFire.color = Color.clear;
         }
 
-        if (Input.GetMouseButtonDown(0) && !ClickedInventoryItem())
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             if(!canUseHand)
             {

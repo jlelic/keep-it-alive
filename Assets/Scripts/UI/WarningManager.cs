@@ -5,70 +5,98 @@ using UnityEngine.UI;
 
 public class WarningManager : MonoBehaviour
 {
-    public Text[] textComponents;
-    
+    [SerializeField] GameObject warningTextPrefab;
 
-    HashSet<WarningMessageType> displayedMessages = new HashSet<WarningMessageType>();
+    Dictionary<WarningMessageType, Text> displayedMessages = new Dictionary<WarningMessageType, Text>();
+    Dictionary<WarningMessageType, Coroutine> timerCoroutines = new Dictionary<WarningMessageType, Coroutine>();
 
     void Start()
     {
+        displayedMessages.Clear();
     }
 
-    public void addWarning(WarningMessageType type)
+    public void addWarning(WarningMessageType type, float time = 0)
     {
-        displayedMessages.Add(type);
-        updateWarnings();
+        var newTextObject = Instantiate(warningTextPrefab);
+        newTextObject.transform.parent = transform;
+        var text = newTextObject.GetComponentInChildren<Text>();
+        text.transform.position += new Vector3(Random.Range(-Screen.width/4, Screen.width / 4), 0, 0);
+        removeWarning(type);
+        displayedMessages.Add(type, text);
+        SetTextAndColor(type, text);
+
+        Coroutine oldCoroutine = null;
+        if(timerCoroutines.TryGetValue(type, out oldCoroutine))
+        {
+            timerCoroutines.Remove(type);
+            StopCoroutine(oldCoroutine);
+        }
+
+        if(time>0)
+        {
+            var coroutine = StartCoroutine(TimeOutWarning(type, time));
+            timerCoroutines.Add(type, coroutine);
+        }
     }
 
     public void removeWarning(WarningMessageType type)
     {
-        displayedMessages.Remove(type);
-        updateWarnings();
+        Text text; 
+        if (displayedMessages.TryGetValue(type, out text))
+        {
+            Destroy(text.transform.parent.gameObject);
+            displayedMessages.Remove(type);
+        }
     }
 
-    void updateWarnings()
+    IEnumerator TimeOutWarning(WarningMessageType type, float time)
     {
-        clearWarnings();
+        yield return new WaitForSeconds(time);
+        removeWarning(type);
+    }
 
-        int i = 0;
-        foreach (WarningMessageType type in displayedMessages)
-        {
-            if (i < textComponents.Length)
+    void SetTextAndColor(WarningMessageType type, Text textComponent)
+    {
+    //    ENGINE_BROKEN,
+    //GAS_LEAK,
+    //GAS_LOW,
+    //OVERHEATING,
+    //POWER_LOW,
+    //POWER_INSUFFICIENT,
+    //POWER_ZERO,
+    //WATER_LOW,
+    //WATER_INSUFFICIENT
+            switch (type)
             {
-                switch(type)
-                {
-                    case WarningMessageType.ENERGY_LOW:
-                        textComponents[i].text = "Your energy is running low";
-                        textComponents[i].color = Color.yellow;
-                        break;
-                    case WarningMessageType.GAS_LOW:
-                        textComponents[i].text = "You're running out of gas";
-                        textComponents[i].color = Color.green;
-                        break;
-                    case WarningMessageType.GAS_LEAK:
-                        textComponents[i].text = "You're losing gas, find a way to seal the leak";
-                        textComponents[i].color = Color.green;
-                        break;
-                    case WarningMessageType.OVERHEAT:
-                        textComponents[i].text = "Engine overheating! Cool it quick";
-                        textComponents[i].color = Color.red;
-                        break;
-                    case WarningMessageType.WATER_INSUFFICIENT:
-                        textComponents[i].text = "You don't have enough water to clean your window";
-                        textComponents[i].color = Color.blue;
-                        break;
-                    // TODO ETC
-                }
+            case WarningMessageType.ENGINE_DAMAGED:
+                textComponent.text = "ENGINE DAMAGED";
+  //              textComponent.color = Color.yellow;
+                break;
+            case WarningMessageType.ENGINE_CRITICAL:
+                textComponent.text = "ENGINE CRITICAL";
+//                textComponent.color = Color.yellow;
+                break;
+            case WarningMessageType.GAS_LOW:
+                    textComponent.text = "GAS LOW";
+                    break;
+                case WarningMessageType.GAS_LEAK:
+                    textComponent.text = "You're losing gas, find a way to seal the leak";
+                    break;
+                case WarningMessageType.OVERHEATING:
+                    textComponent.text = "ENGINE OVERHEATING";
+                    break;
+                case WarningMessageType.POWER_INSUFFICIENT:
+                    textComponent.text = "POWER LOW";
+                    break;
+                case WarningMessageType.WATER_LOW:
+                    textComponent.text = "WATER LOW";
+                    break;
+                case WarningMessageType.WATER_INSUFFICIENT:
+                    textComponent.text = "NOT ENOUGH WATER TO CLEAN THE WINDOW";
+                    break;
+                //                    textComponent.color = Color.blue;
+                break;
+                // TODO ETC
             }
-            i++;
-        }
-    }
-
-    void clearWarnings()
-    {
-        foreach (Text textComponent in textComponents)
-        {
-            textComponent.text = "";
-        }
     }
 }

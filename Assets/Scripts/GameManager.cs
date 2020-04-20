@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     RoadsManager roadsManager;
     WiperManager wiperManager;
     ParticleSystemsManager particleManager;
+    WarningManager warningManager;
 
     bool isOverheating;
 
@@ -53,12 +54,13 @@ public class GameManager : MonoBehaviour
         roadsManager = GetComponent<RoadsManager>();
         roadsManager.StartSpawning();
         wiperManager = GetComponent<WiperManager>();
+        warningManager = FindObjectOfType<WarningManager>();
         particleManager = FindObjectOfType<ParticleSystemsManager>();
     }
 
     void Update()
     {
-        if (!wiperManager.IsWiping && Input.GetKeyDown(KeyCode.Space))
+        if (!wiperManager.IsWiping && Input.GetKeyDown(KeyCode.W))
         {
             if(PowerLevel < WiperPowerCost)
             {
@@ -69,6 +71,10 @@ public class GameManager : MonoBehaviour
             if (WaterLevel >= WiperWaterCost)
             {
                 WaterLevel -= WiperWaterCost;
+            }
+            else
+            {
+                warningManager.addWarning(WarningMessageType.WATER_INSUFFICIENT, 3);
             }
         }
     }
@@ -119,6 +125,7 @@ public class GameManager : MonoBehaviour
     {
         EngineLevel -= HitDamage;
         EngineLevel = Mathf.Max(0, EngineLevel);
+        warningManager.addWarning(WarningMessageType.ENGINE_DAMAGED, 2);
     }
     public void DirtyWindow()
     {
