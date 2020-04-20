@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (!wiperManager.IsWiping && Input.GetKeyDown(KeyCode.Space))
+        if (!wiperManager.IsWiping && Input.GetKeyDown(KeyCode.W))
         {
             if(PowerLevel < WiperPowerCost)
             {
