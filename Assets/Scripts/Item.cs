@@ -14,7 +14,7 @@ public class Item : MonoBehaviour
         itemManager = FindObjectOfType<ItemManager>();
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    protected virtual void OnTriggerEnter2D(Collider2D other)
     {
         var hand = other.GetComponent<Hand>();
         if(hand != null && !hasBeenGrabbed)

@@ -14,7 +14,7 @@ public class WiperManager : MonoBehaviour
     [SerializeField] RectTransform uiWiper;
     [SerializeField] GameObject shipWiper;
 
-
+    AudioSource audioSource;
     RectTransform maskTransform;
     int dIndex = 0; 
 
@@ -24,6 +24,7 @@ public class WiperManager : MonoBehaviour
 
     void Start()
     {
+        audioSource = shipWiper.GetComponent<AudioSource>();
         dirtOverlay[dIndex].gameObject.SetActive(true);
         dirtOverlay[dIndex + 1].gameObject.SetActive(true);
         dirtOverlay[dIndex].sprite = dirtSprites[0];
@@ -61,6 +62,8 @@ public class WiperManager : MonoBehaviour
             return;
         }
         IsWiping = true;
+
+        audioSource.Play();
 
         var wSize = uiWiper.sizeDelta;
         uiWiper.gameObject.SetActive(true);

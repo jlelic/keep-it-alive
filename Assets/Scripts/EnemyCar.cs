@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EnemyCar : MonoBehaviour
 {
+    [SerializeField] AudioSource audioSourceHit;
+
     bool isOk = true;
     Rigidbody2D rigidbody;
 
@@ -16,6 +18,11 @@ public class EnemyCar : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         isOk = false;
+    }
+
+    public void PlayHitSound()
+    {
+        Utils.PlayAudio(audioSourceHit, true);
     }
 
     // Update is called once per frame

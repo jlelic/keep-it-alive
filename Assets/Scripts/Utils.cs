@@ -62,9 +62,9 @@ public class Utils
         return string.Format("{0:0}:{1:00}", m, s);
     }
 
-    public static void PlayAudio(AudioSource source, bool randomPitch = false)
+    public static void PlayAudio(AudioSource source, bool randomPitch = false, float randomAmount = 0.25f)
     {
-        source.pitch = randomPitch ? UnityEngine.Random.Range(0.75f, 1.5f) : 1;
+        source.pitch = randomPitch ? UnityEngine.Random.Range(1-randomAmount, 1+2*randomAmount) : 1;
         source.Play();
     }
 

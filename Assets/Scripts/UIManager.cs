@@ -29,10 +29,11 @@ public class UIManager : MonoBehaviour
     float lastOldWaterValue = 100;
     float lastOldEngineLevel = 100;
 
+    AudioSource alarmAudio;
     GameManager GM;
     WarningManager warningManager;
 
-    float uiScale = 1;
+    float uiScale = 4;
 
     bool gasWarning;
     bool heatWarning;
@@ -43,6 +44,7 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         GM = GameManager.Instance;
+        alarmAudio = GetComponent<AudioSource>();
         warningManager = FindObjectOfType<WarningManager>();
         historyWaterBar = MakeHistoryBar(WaterBar);
         historyEngineBar = MakeHistoryBar(EngineBar);
@@ -56,12 +58,13 @@ public class UIManager : MonoBehaviour
 
     private RectTransform MakeHistoryBar(RectTransform bar)
     {
-        var oldBar = Instantiate(bar);
-        oldBar.transform.SetParent(bar.transform.parent);
-        oldBar.position = bar.position;
-        oldBar.SetAsFirstSibling();
-        oldBar.GetComponent<Image>().color = historyBarColor;
-        return oldBar.GetComponent<RectTransform>();
+        var historyBar = Instantiate(bar);
+        historyBar.transform.SetParent(bar.transform.parent);
+        historyBar.position = bar.position;
+        historyBar.transform.localScale = bar.transform.localScale;
+        historyBar.SetAsFirstSibling();
+        historyBar.GetComponent<Image>().color = historyBarColor;
+        return historyBar.GetComponent<RectTransform>();
     }
 
     private void SetBarValue(RectTransform bar, float value)
@@ -89,6 +92,23 @@ public class UIManager : MonoBehaviour
             SetBarValue(EngineBar, 0);
             SetBarValue(historyEngineBar, 0);
             SetBarValue(historyWaterBar, 0);
+            warningManager.removeAll();
+            gasWarning = false;
+            heatWarning = false;
+            waterWarning = false;
+            powerWarning = false;
+            engineWarning = false;
+        }
+        var anyWarning = gasWarning || heatWarning || waterWarning || powerWarning || engineWarning;
+        if (alarmAudio.isPlaying)
+        {
+            if(!anyWarning)
+            {
+                alarmAudio.Stop();
+            }
+        }else if(anyWarning)
+        {
+            alarmAudio.Play();
         }
     }
 
@@ -125,7 +145,7 @@ public class UIManager : MonoBehaviour
             gasContainer.color = barContainerColor;
         }
 
-        GasBarContainer.sizeDelta = new Vector2(uiScale * GM.GasCapacity + 20, GasBarContainer.sizeDelta.y);
+        //GasBarContainer.sizeDelta = new Vector2(uiScale * GM.GasCapacity + 20, GasBarContainer.sizeDelta.y);
         SetBarValue(GasBar, GM.GasLevel);
     }
     private void UpdatePowerBar()

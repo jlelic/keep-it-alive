@@ -7,8 +7,11 @@ public class SaddablePerson : MonoBehaviour
     [SerializeField] GameObject happyFace;
     [SerializeField] GameObject sadFace;
 
+    AudioSource audioSource;
+
     private void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         happyFace.SetActive(true);
         sadFace.SetActive(false);
     }
@@ -17,5 +20,9 @@ public class SaddablePerson : MonoBehaviour
     {
         happyFace.SetActive(false);
         sadFace.SetActive(true);
+        if(audioSource != null)
+        {
+            Utils.PlayAudio(audioSource, true, 0.1f);
+        }
     }
 }

@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class RoadsManager : MonoBehaviour
 {
-    public GameObject RoadPrefab;
+    public List<GameObject> RoadPrefabs;
+    public GameObject ForcedSpawn;
+    public List<GameObject> GamePrefabs;
 
     public float DespawnTreshold = -20;
     public float RoadSpacing = 10;
@@ -29,7 +31,7 @@ public class RoadsManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!GM.IsPlaying)
+        if (!GM.IsPlaying || GM.IsGameCompleted)
         {
             return;
         }
@@ -50,7 +52,13 @@ public class RoadsManager : MonoBehaviour
 
     private void SpawnRoadAt(float y)
     {
-        var newRoad = GameObject.Instantiate(RoadPrefab, new Vector3(0, y, 10), Quaternion.identity);
+        var newRoadPrefab = RoadPrefabs[Random.Range(0, RoadPrefabs.Count)];
+        if (ForcedSpawn != null)
+        {
+            newRoadPrefab = ForcedSpawn;
+            ForcedSpawn = null;
+        }
+        var newRoad = GameObject.Instantiate(newRoadPrefab, new Vector3(0, y, 10), Quaternion.identity);
         roadList.Add(newRoad.GetComponent<Road>());
     }
 }

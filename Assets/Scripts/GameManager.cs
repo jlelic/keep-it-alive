@@ -1,22 +1,33 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] GameObject shipExplosion;
+
+    [SerializeField] Text progressText;
+    [SerializeField] Image gameCompletedOverlay;
+    [SerializeField] Image gameOverOverlay;
+    [SerializeField] Text gameOverText;
+    [SerializeField] GameObject endGame;
+    [SerializeField] GameObject LastRoad;
     public static GameManager Instance { get; private set; }
     public bool IsPlaying { get; private set; } = true;
     public float CarSpeed { get; private set; } = 0f;
-    public float ActualMaxSpeed { get; private set; } = 0.1f;
-    public float MaxSpeed { get; private set; } = 0.1f;
+    public float ActualMaxSpeed { get; private set; } = 0.05f;
+    public float MaxSpeed { get; private set; } = 0.05f;
     public float SlowDown { get; private set; } = 0.001f;
     public float SpeedUp{ get; private set; } = 0.0005f;
     public float GasCapacity { get; private set; } = 100f;
     public float GasLevel { get; private set; } = 100f;
-    public float GasConsumption { get; private set; } = 0.01f;
+    public float GasConsumption { get; private set; } = 0.015f;
     public float WaterEvaporation { get; private set; } = 0.015f;
     public float PowerConsumption { get; private set; } = 0.005f;
-    public float HeatIncrease { get; private set; } = 0.02f;
+    public float HeatIncrease { get; private set; } = 0.015f;
     public float HeatLevel { get; private set; } = 20f;
     public float PowerLevel { get; private set; } = 100f;
     public float WaterLevel { get; private set; } = 100f;
@@ -29,14 +40,21 @@ public class GameManager : MonoBehaviour
     public int RefillingWater { get; private set; }
     public int RefillingGas{ get; private set; }
     public int Repairing { get; private set; }
+    public float Progress { get; private set; }
+    public bool IsGameCompleted { get; private set; }
+
+    public bool InMenu = true;
+    public bool TutorialMode = true;
+    float timeElapsed = 0;
 
     RoadsManager roadsManager;
     WiperManager wiperManager;
     ParticleSystemsManager particleManager;
     WarningManager warningManager;
+    TutorialManager tutorialManager;
 
     bool isOverheating;
-
+    bool isGameOver;
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -54,14 +72,22 @@ public class GameManager : MonoBehaviour
         roadsManager = GetComponent<RoadsManager>();
         roadsManager.StartSpawning();
         wiperManager = GetComponent<WiperManager>();
+        tutorialManager = GetComponent<TutorialManager>();
         warningManager = FindObjectOfType<WarningManager>();
         particleManager = FindObjectOfType<ParticleSystemsManager>();
     }
 
     void Update()
     {
+        if(!IsGameCompleted && !isGameOver && (EngineLevel <= 0 || HeatLevel >=100 || GasLevel <= 0))
+        {
+            StartCoroutine(GameOver(GasLevel > 0));
+            isGameOver = true;
+        }
+
         if (!wiperManager.IsWiping && Input.GetKeyDown(KeyCode.W))
         {
+            tutorialManager.OnWindowCleaned();
             if(PowerLevel < WiperPowerCost)
             {
                 return;
@@ -77,15 +103,54 @@ public class GameManager : MonoBehaviour
                 warningManager.addWarning(WarningMessageType.WATER_INSUFFICIENT, 3);
             }
         }
+        
+        if((IsGameCompleted || isGameOver) && Input.GetMouseButtonDown(0))
+        {
+            SceneManager.LoadScene(0);
+        }
+
+        if(Progress >= 2000)
+        {
+            roadsManager.ForcedSpawn = LastRoad;
+        }
     }
 
     void FixedUpdate()
     {
-        MaxSpeed = EngineLevel > 40 ? ActualMaxSpeed : ActualMaxSpeed * EngineLevel / 40f;
-        EngineLevel = Mathf.Clamp(EngineLevel, 0, 100);
+        if(InMenu)
+        {
+            WaterLevel = 100;
+            PowerLevel = 100;
+            CarSpeed = MaxSpeed;
+            return;
+        }
+        else if(!TutorialMode)
+        {
+            progressText.text = Mathf.RoundToInt(Progress) + " m";
+            timeElapsed += Time.fixedDeltaTime;
+            ActualMaxSpeed = 0.05f + timeElapsed * 0.0002f;
+        }
 
-        GasLevel -= GasConsumption;
-        GasLevel = Mathf.Clamp(GasLevel, 0, 100);
+        MaxSpeed = EngineLevel > 40 ? ActualMaxSpeed : ActualMaxSpeed * EngineLevel / 40f;
+        if(GasLevel <=0 )
+        {
+            MaxSpeed = 0;
+        }
+
+        if(!TutorialMode)
+        {
+            GasLevel -= GasConsumption;
+            PowerLevel -= PowerConsumption;
+            WaterLevel -= HeatLevel > 80 ? (HeatLevel - 80) / 20f * WaterEvaporation : 0;
+            HeatLevel += HeatIncrease;
+        }
+        else
+        {
+            GasLevel -= GasConsumption/8f;
+            PowerLevel -= PowerConsumption/8f;
+            HeatLevel += HeatIncrease/8f;
+        }
+
         if (GasLevel <= 0)
         {
             CarSpeed = Mathf.Max(0f, CarSpeed-SlowDown);
@@ -94,15 +159,6 @@ public class GameManager : MonoBehaviour
             CarSpeed = Mathf.Min(MaxSpeed, CarSpeed + SpeedUp);
         }
 
-
-        PowerLevel -= PowerConsumption;
-        PowerLevel = Mathf.Clamp(PowerLevel, 0, 100);
-
-        WaterLevel -= HeatLevel > 80 ? (HeatLevel-80) /20f * WaterEvaporation : 0;
-        WaterLevel = Mathf.Clamp(WaterLevel, 0, 100);
-
-        HeatLevel += HeatIncrease;
-        HeatLevel = Mathf.Clamp(HeatLevel, 0, 100);
         if (isOverheating)
         {
             if(HeatLevel < 80)
@@ -119,14 +175,95 @@ public class GameManager : MonoBehaviour
                 particleManager.StartOverheating();
             }
         }
+
+        EngineLevel = Mathf.Clamp(EngineLevel, 0, 100);
+        GasLevel = Mathf.Clamp(GasLevel, 0, 100);
+        PowerLevel = Mathf.Clamp(PowerLevel, 0, 100);
+        WaterLevel = Mathf.Clamp(WaterLevel, 0, 100);
+        HeatLevel = Mathf.Clamp(HeatLevel, 0, 100);
+
+        Progress += CarSpeed;
+
     }
+
+    public void StartTheGame()
+    {
+        timeElapsed = 0;
+        TutorialMode = false;
+        roadsManager.RoadPrefabs.Clear();
+        Progress = 0;
+        foreach (var prefab in roadsManager.GamePrefabs)
+        {
+            roadsManager.RoadPrefabs.Add(prefab);
+        }
+    }
+
+    IEnumerator GameOver(bool withExplosion)
+    {
+        isGameOver = true;
+        if (withExplosion)
+        {
+            shipExplosion.SetActive(true);
+        }
+        yield return new WaitForSeconds(1.5f);
+        if(!withExplosion && GasLevel > 0)
+        {
+            isGameOver = false;
+            yield break;
+        }
+        gameOverOverlay.gameObject.SetActive(true);
+        foreach(var graphic in gameOverOverlay.gameObject.GetComponentsInChildren<Graphic>())
+        {
+            if(graphic == gameOverOverlay)
+            {
+                continue;
+            }
+            graphic.color = Color.clear;
+            Utils.tweenColor(graphic, Color.white, 2,1.5f);
+        }
+        gameOverOverlay.color = Color.clear;
+        Utils.tweenColor(gameOverOverlay, Color.black, 2);
+    }
+
+    public void GameCompleted()
+    {
+        if(IsGameCompleted)
+        {
+            return;
+        }
+        IsGameCompleted = true;
+        endGame.SetActive(true);
+        gameCompletedOverlay.gameObject.SetActive(true);
+        foreach (var graphic in gameCompletedOverlay.gameObject.GetComponentsInChildren<Graphic>())
+        {
+            if (graphic == gameCompletedOverlay)
+            {
+                continue;
+            }
+            graphic.color = Color.clear;
+            Utils.tweenColor(graphic, Color.white, 2, 6);
+        }
+        gameCompletedOverlay.color = Color.clear;
+        Utils.tweenColor(gameCompletedOverlay, Color.black, 2, 4);
+    }
+
+
 
     public void TakeHit()
     {
         EngineLevel -= HitDamage;
         EngineLevel = Mathf.Max(0, EngineLevel);
         warningManager.addWarning(WarningMessageType.ENGINE_DAMAGED, 2);
+        StartCoroutine(FreezeTime());
     }
+
+    IEnumerator FreezeTime()
+    {
+        Time.timeScale = 0.2f;
+        yield return new WaitForSecondsRealtime(0.2f);
+        Time.timeScale = 1;
+    }
+
     public void DirtyWindow()
     {
         wiperManager.Dirty();
@@ -137,22 +274,27 @@ public class GameManager : MonoBehaviour
         switch(itemType)
         {
             case ItemType.ICECREAM:
+                tutorialManager.OnIcecreamUsed();
                 particleManager.ApplyIcecream();
                 StartCoroutine(ApplyIcecream());
                 break;
             case ItemType.PHONE:
+                tutorialManager.OnBateryRecharged();
                 particleManager.ChargeBattery();
                 StartCoroutine(ApplyPhone());
                 break;
             case ItemType.WATER:
+                tutorialManager.OnWaterRefilled();
                 particleManager.RefillWater();
                 StartCoroutine(ApplyWater());
                 break;
             case ItemType.WRENCH:
+                tutorialManager.OnShipRepaired();
                 particleManager.Repair();
                 StartCoroutine(ApplyWrench());
                 break;
             case ItemType.GAS:
+                tutorialManager.OnGasRefilled();
                 particleManager.RefillGass();
                 StartCoroutine(ApplyGas());
                 break;

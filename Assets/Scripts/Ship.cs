@@ -9,7 +9,7 @@ public class Ship : MonoBehaviour
 
     SpriteRenderer sr;
     bool invulnerable = false;
-    float invulnerabilityDuration = 5f;
+    float invulnerabilityDuration = 3.5f;
     Color invulnerabilityColor = Color.cyan;
     int insideDirt = 0;
     ParticleSystemsManager particleManager;
@@ -35,6 +35,8 @@ public class Ship : MonoBehaviour
 
         if (collision.rigidbody.GetComponent<EnemyCar>() != null)
         {
+            collision.rigidbody.GetComponent<EnemyCar>().PlayHitSound();
+
             if (!invulnerable) {
                 GameManager.Instance.TakeHit();
                 GameManager.Instance.DirtyWindow();

@@ -18,7 +18,7 @@ public class WarningManager : MonoBehaviour
     public void addWarning(WarningMessageType type, float time = 0)
     {
         var newTextObject = Instantiate(warningTextPrefab);
-        newTextObject.transform.parent = transform;
+        newTextObject.transform.SetParent(transform);
         var text = newTextObject.GetComponentInChildren<Text>();
         text.transform.position += new Vector3(Random.Range(-Screen.width/4, Screen.width / 4), 0, 0);
         removeWarning(type);
@@ -53,6 +53,14 @@ public class WarningManager : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         removeWarning(type);
+    }
+
+    public void removeAll()
+    {
+        foreach(var x in displayedMessages)
+        {
+            removeWarning(x.Key);
+        }
     }
 
     void SetTextAndColor(WarningMessageType type, Text textComponent)

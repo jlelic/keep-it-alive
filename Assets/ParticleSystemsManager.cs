@@ -12,9 +12,18 @@ public class ParticleSystemsManager : MonoBehaviour
     [SerializeField] Animator wrench;
     [SerializeField] Animator gas;
     [SerializeField] SpriteRenderer icecream;
+    [SerializeField] AudioClip soundBubbles;
+    [SerializeField] AudioClip soundElectricity;
+    [SerializeField] AudioClip soundIcecream;
 
     int wrenches = 0;
     int refilling = 0;
+    AudioSource audioSource;
+
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     public void StartOverheating()
     {
@@ -28,6 +37,7 @@ public class ParticleSystemsManager : MonoBehaviour
 
     public void ApplyIcecream()
     {
+        audioSource.PlayOneShot(soundIcecream);
         engineVapor.Play();
         icecream.gameObject.SetActive(true);
         icecream.color = Color.white;
@@ -36,11 +46,13 @@ public class ParticleSystemsManager : MonoBehaviour
 
     public void ChargeBattery()
     {
+        audioSource.PlayOneShot(soundElectricity);
         batterySparks.Play();
     }
 
     public void RefillWater()
     {
+        audioSource.PlayOneShot(soundBubbles);
         bubbles.Play();
     }
 

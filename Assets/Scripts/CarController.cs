@@ -9,10 +9,11 @@ public class CarController : MonoBehaviour
     [SerializeField] SpriteRenderer leftFire;
     [SerializeField] SpriteRenderer rightFire;
     [SerializeField] Animator tentacleAnimator;
-    float TurningSpeed = 30;
+    float TurningSpeed = 100;
     bool canUseHand = true;
     Hand hand;
     Rigidbody2D rigidbody;
+    AudioSource audioSource;
     GameManager GM;
 
     void Start()
@@ -20,33 +21,22 @@ public class CarController : MonoBehaviour
         GM = GameManager.Instance;
         hand = GetComponentInChildren<Hand>();
         rigidbody = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
     }
 
 
-    void Update()
+    private void Update()
     {
-        //transform.position += new Vector3(Input.GetAxis("Horizontal"),0,0)*Mathf.Min(TurningSpeed, GameManager.Instance.CarSpeed);
-        float axis = Input.GetAxis("Horizontal");
-        if (GM.MaxSpeed > 0)
-        {
-            rigidbody.AddForce(new Vector2(axis, 0) * (TurningSpeed * GM.CarSpeed / GM.MaxSpeed));
-            rightFire.color = new Color(1, 1, 1, axis >= 0 ? 1 - axis : 1);
-            leftFire.color = new Color(1, 1, 1, axis <= 0 ? 1 + axis : 1);
-        }
-        else
-        {
-            rightFire.color = Color.clear;
-            leftFire.color = Color.clear;
-        }
-
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if(!canUseHand)
+            if (!canUseHand)
             {
                 return;
             }
 
             canUseHand = false;
+
+            Utils.PlayAudio(audioSource, true);
 
             var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePos -= new Vector3(0, 0, mousePos.z);
@@ -61,7 +51,7 @@ public class CarController : MonoBehaviour
             var targetPos = targetWorldPos - transform.position;
             var originalPos = hand.transform.localPosition;
             // callback hell (:
-            iTween.MoveTo(hand.gameObject, 
+            iTween.MoveTo(hand.gameObject,
                 iTween.Hash(
                     "position", targetPos,
                     "time", 0.6f,
@@ -79,6 +69,32 @@ public class CarController : MonoBehaviour
                             )); ;
                     })
                 ));
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (GM.IsGameCompleted)
+        {
+            rigidbody.constraints = RigidbodyConstraints2D.None;
+            rigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
+            rigidbody.AddForce(Vector2.up*100);
+            return;
+        }
+
+        //transform.position += new Vector3(Input.GetAxis("Horizontal"),0,0)*Mathf.Min(TurningSpeed, GameManager.Instance.CarSpeed);
+        float axis = Input.GetAxis("Horizontal");
+
+        if (GM.MaxSpeed > 0)
+        {
+            rigidbody.AddForce(new Vector2(axis, 0) * (TurningSpeed * GM.CarSpeed / GM.MaxSpeed));
+            rightFire.color = new Color(1, 1, 1, axis >= 0 ? 1 - axis : 1);
+            leftFire.color = new Color(1, 1, 1, axis <= 0 ? 1 + axis : 1);
+        }
+        else
+        {
+            rightFire.color = Color.clear;
+            leftFire.color = Color.clear;
         }
     }
 
