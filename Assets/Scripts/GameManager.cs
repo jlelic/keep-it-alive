@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
 
     public bool InMenu = true;
     public bool TutorialMode = true;
+    public bool EndlessMode = false;
     float timeElapsed = 0;
 
     RoadsManager roadsManager;
@@ -109,7 +110,7 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene(0);
         }
 
-        if(Progress >= 2000)
+        if(!EndlessMode && Progress >= 2000)
         {
             roadsManager.ForcedSpawn = LastRoad;
         }

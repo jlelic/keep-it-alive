@@ -7303,6 +7303,7 @@ MonoBehaviour:
     type: 3}
   InMenu: 1
   TutorialMode: 1
+  EndlessMode: 0
 --- !u!4 &745583880
 Transform:
   m_ObjectHideFlags: 0
@@ -34962,7 +34963,7 @@ GameObject:
   - component: {fileID: 1776668869}
   - component: {fileID: 1776668868}
   m_Layer: 5
-  m_Name: ButtonTutorial (2)
+  m_Name: ButtonPlayEndless
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

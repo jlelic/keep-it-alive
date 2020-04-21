@@ -30,6 +30,7 @@ public class MenuManager : MonoBehaviour
     }
     public void PlayEndless()
     {
+        GameManager.Instance.EndlessMode = true;
         EnterGameMode(false);
     }
 
