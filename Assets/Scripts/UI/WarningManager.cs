@@ -93,7 +93,7 @@ public class WarningManager : MonoBehaviour
                 case WarningMessageType.OVERHEATING:
                     textComponent.text = "ENGINE OVERHEATING";
                     break;
-                case WarningMessageType.POWER_INSUFFICIENT:
+                case WarningMessageType.POWER_LOW:
                     textComponent.text = "POWER LOW";
                     break;
                 case WarningMessageType.WATER_LOW:

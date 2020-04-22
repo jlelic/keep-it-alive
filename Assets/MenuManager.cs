@@ -34,6 +34,11 @@ public class MenuManager : MonoBehaviour
         EnterGameMode(false);
     }
 
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+
     void EnterGameMode(bool tutorialMode)
     {
         GameManager.Instance.InMenu = false;

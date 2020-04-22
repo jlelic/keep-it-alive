@@ -97,6 +97,10 @@ public class TutorialManager : MonoBehaviour
     }
     public void OnWaterRefilled()
     {
+        if (tutorialLevel != 6)
+        {
+            return;
+        }
         tutorialLevel = 7;
         UpdateLastmessage();
         roadsManager.RoadPrefabs.Clear();
@@ -105,12 +109,20 @@ public class TutorialManager : MonoBehaviour
 
     public void OnGasRefilled()
     {
+        if (tutorialLevel != 7)
+        {
+            return;
+        }
         gasUsed = true;
         UpdateLastmessage();
     }
 
     public void OnIcecreamUsed()
     {
+        if (tutorialLevel != 7)
+        {
+            return;
+        }
         icecreamUsed = true;
         UpdateLastmessage();
 
@@ -118,23 +130,39 @@ public class TutorialManager : MonoBehaviour
 
     public void OnBateryRecharged()
     {
+        if (tutorialLevel != 7)
+        {
+            return;
+        }
         phoneUsed = true;   
         UpdateLastmessage();
     }
     public void OnGasStolen()
     {
+        if (tutorialLevel != 7)
+        {
+            return;
+        }
         gasCollected = true;
         UpdateLastmessage();
     }
 
     public void OnIcecreamStolen()
     {
+        if (tutorialLevel != 7)
+        {
+            return;
+        }
         icecreamCollected = true;
         UpdateLastmessage();
     }
 
     public void OnPhoneStolen()
     {
+        if (tutorialLevel != 7)
+        {
+            return;
+        }
         phoneCollected = true;
         UpdateLastmessage();
     }
@@ -182,6 +210,7 @@ public class TutorialManager : MonoBehaviour
         {
             return;
         }
+        tutorialLevel = 10;
         tutorialText.text = "Well done!\nNow if break the ship, go out of fuel or overheat the engine you'll lose.\n\nGood luck, off you go!";
         GameManager.Instance.StartTheGame();
         iTween.ValueTo(tutorialBox.gameObject, iTween.Hash(

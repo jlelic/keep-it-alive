@@ -59,6 +59,9 @@ public class RoadsManager : MonoBehaviour
             ForcedSpawn = null;
         }
         var newRoad = GameObject.Instantiate(newRoadPrefab, new Vector3(0, y, 10), Quaternion.identity);
+        if(Random.value > 0.5f)
+        {
+        }
         roadList.Add(newRoad.GetComponent<Road>());
     }
 }

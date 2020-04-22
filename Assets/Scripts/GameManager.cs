@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     public float GasLevel { get; private set; } = 100f;
     public float GasConsumption { get; private set; } = 0.015f;
     public float WaterEvaporation { get; private set; } = 0.015f;
-    public float PowerConsumption { get; private set; } = 0.005f;
+    public float PowerConsumption { get; private set; } = 0.01f;
     public float HeatIncrease { get; private set; } = 0.015f;
     public float HeatLevel { get; private set; } = 20f;
     public float PowerLevel { get; private set; } = 100f;
@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
     public int Repairing { get; private set; }
     public float Progress { get; private set; }
     public bool IsGameCompleted { get; private set; }
+    public bool IsTutorialCompleted { get; private set; }
 
     public bool InMenu = true;
     public bool TutorialMode = true;
@@ -132,7 +133,7 @@ public class GameManager : MonoBehaviour
             ActualMaxSpeed = 0.05f + timeElapsed * 0.0002f;
         }
 
-        MaxSpeed = EngineLevel > 40 ? ActualMaxSpeed : ActualMaxSpeed * EngineLevel / 40f;
+        MaxSpeed = EngineLevel > HitDamage ? ActualMaxSpeed : (0.015f * EngineLevel / HitDamage + 0.02f);
         if(GasLevel <=0 )
         {
             MaxSpeed = 0;
@@ -191,6 +192,7 @@ public class GameManager : MonoBehaviour
     {
         timeElapsed = 0;
         TutorialMode = false;
+        IsTutorialCompleted = true;
         roadsManager.RoadPrefabs.Clear();
         Progress = 0;
         foreach (var prefab in roadsManager.GamePrefabs)
@@ -212,6 +214,7 @@ public class GameManager : MonoBehaviour
             isGameOver = false;
             yield break;
         }
+        gameOverText.text += Mathf.RoundToInt(Progress) + " m";
         gameOverOverlay.gameObject.SetActive(true);
         foreach(var graphic in gameOverOverlay.gameObject.GetComponentsInChildren<Graphic>())
         {
@@ -261,7 +264,7 @@ public class GameManager : MonoBehaviour
     IEnumerator FreezeTime()
     {
         Time.timeScale = 0.2f;
-        yield return new WaitForSecondsRealtime(0.2f);
+        yield return new WaitForSecondsRealtime(0.15f);
         Time.timeScale = 1;
     }
 
@@ -305,7 +308,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator ApplyIcecream()
     {
         CoolingDown++;
-        for (int i = 0; i < 25; i++)
+        for (int i = 0; i < 20; i++)
         {
             HeatLevel--;
             yield return new WaitForSeconds(0.05f);

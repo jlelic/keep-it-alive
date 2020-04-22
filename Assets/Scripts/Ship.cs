@@ -39,7 +39,6 @@ public class Ship : MonoBehaviour
 
             if (!invulnerable) {
                 GameManager.Instance.TakeHit();
-                GameManager.Instance.DirtyWindow();
                 StartCoroutine("MakeInvulnerable");
             }
             

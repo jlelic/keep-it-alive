@@ -18,11 +18,11 @@ public class SaddablePerson : MonoBehaviour
 
     public void MakeSad()
     {
-        happyFace.SetActive(false);
-        sadFace.SetActive(true);
-        if(audioSource != null)
+        if (happyFace.activeSelf && audioSource != null)
         {
             Utils.PlayAudio(audioSource, true, 0.1f);
         }
+        happyFace.SetActive(false);
+        sadFace.SetActive(true);
     }
 }
